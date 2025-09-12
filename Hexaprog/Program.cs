@@ -7,7 +7,7 @@ namespace Hexaprog
 
         static void Main(string[] args)
         {
-            F1Hello();
+            /*F1Hello();
             F2Hi();
             F3Dupla();
             F4Szamolasok();
@@ -19,6 +19,13 @@ namespace Hexaprog
             F10EgyenletMegoldas();
             F11Atfogo();
             F12Teglatest();
+            F13KorKer();
+            F14Korcikk();
+            F15KiIras();
+            F16Kiiras();
+            F17OsztoKiiras();
+            F18OsztoOssz();*/
+            F19Perfect();
         }
         static void F1Hello()
         {
@@ -184,7 +191,7 @@ namespace Hexaprog
             }
             else
             {
-                Console.WriteLine("Gyök alatt nem lehet minusz");
+                Console.WriteLine("Gyök alatt nem lehet negatív");
             }
 
             Console.WriteLine();
@@ -245,11 +252,12 @@ namespace Hexaprog
             double[] nums = { BeDouble(), BeDouble() };
             while (nums[0] < 0 && nums[1] < 0)
             {
-                Console.WriteLine($"Nem lehet minusz hosszúságú, add meg újra: ");
+                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
                 nums[0] = BeDouble();
                 nums[1] = BeDouble();
             }
             Console.WriteLine($"Az átfogó hossza: {Math.Round(Math.Sqrt(Math.Pow(nums[0], 2) + Math.Pow(nums[1], 2)), 2)}");
+            Console.WriteLine();
         }
 
         static void F12Teglatest()
@@ -258,7 +266,7 @@ namespace Hexaprog
             double[] sides = { BeDouble(), BeDouble(), BeDouble() };
             while (sides[0] < 0 && sides[1] < 0)
             {
-                Console.WriteLine($"Nem lehet minusz hosszúságú, add meg újra: ");
+                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
                 sides[0] = BeDouble();
                 sides[1] = BeDouble();
             }
@@ -266,10 +274,151 @@ namespace Hexaprog
             Console.WriteLine($"A téglatest térfogata: {sides[1] * sides[0] * sides[2]}");
         }
 
-        static void F13KörKer()
+        static void F13KorKer()
         {
-            Console.WriteLine($"F12 Megadja a kör átmárőjét és megadja a kör területét és kerületét");
+            Console.WriteLine("F12 Megadja a kör átmárőjét és megadja a kör területét és kerületét");
             double d = BeDouble();
+            while (d < 0)
+            {
+                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
+                d = BeDouble();
+            }
+            Console.WriteLine($"A kör kerülete: {d * Math.PI}");
+            Console.WriteLine($"A kör területe: {Math.Pow(d / 2, 2) * Math.PI}");
+            Console.WriteLine();
+        }
+        
+        static void F14Korcikk()
+        {
+            Console.WriteLine("F13 Kiszámolja a körcikk sugarából és a központi sögéből a területét és a határoló ív hosszát");
+            double r = BeDouble();
+            double a = BeDouble();
+            while (a < 0 && r < 0)
+            {
+                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
+                a = BeDouble();
+                r = BeDouble();
+            }
+            Console.WriteLine($"A körcik területe: {(a/360)*Math.Pow(r,2)*Math.PI}");
+            Console.WriteLine($"A körív hossza: {r * a}");
+        }
+
+        static void F15KiIras()
+        {
+            Console.WriteLine("F14 A bekért egész számig kiírja az üsszes számot addig");
+            int num = BeInt();
+            while (num < 0)
+            {
+                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
+                num = BeInt();
+            }
+            for (int i = 0; i < num - 1; i++)
+            {
+                Console.Write($"{i} ");
+            }
+            Console.Write($"{num- 1}");
+            Console.WriteLine();
+        }
+
+        static void F16Kiiras()
+        {
+            Console.WriteLine("F15 A bekért egész számig kiírja az összes számot addig");
+            int num = BeInt();
+            while (num < 0)
+            {
+                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
+                num = BeInt();
+            }
+            for (int i = 0; i < num; i++)
+            {
+                Console.WriteLine($"{i} ");
+            }
+            Console.WriteLine();
+        }
+
+        static void F17OsztoKiiras()
+        {
+            Console.WriteLine("F16 A bekért egész számig kiírja az osztóit");
+            int num = BeInt();
+            while (num < 0)
+            {
+                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
+                num = BeInt();
+            }
+            for (int i = 1; i < num+1/2; i++)
+            {
+                if (num % i == 0)
+                {
+                    Console.WriteLine($"{i} ");
+                }
+                
+            }
+            Console.WriteLine(num);
+            Console.WriteLine();
+        }
+        static void F18OsztoOssz()
+        {
+            Console.WriteLine("F17 A bekért egész számig kiírja az osztóinak az összegét");
+            int num = BeInt();
+            long ossz = 0;
+            while (num < 0)
+            {
+                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
+                num = BeInt();
+            }
+            for (int i = 1; i < num+1 / 2; i++)
+            {
+                if (num % i == 0)
+                {
+                    ossz += i;
+                }
+
+            }
+            Console.WriteLine(ossz + num);
+            Console.WriteLine();
+        }
+        static void F19Perfect()
+        {
+            Console.WriteLine("F18 A bekért egész számot és megállapítja róla, hogy tökéletes-e.");
+            int num = BeInt();
+            long ossz = 0;
+            bool perfect = false;
+            while (num < 0)
+            {
+                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
+                num = BeInt();
+            }
+            for (int i = 1; i < num + 1 / 2; i++)
+            {
+                if (num % i == 0)
+                {
+                    ossz += i;
+                }
+
+            }
+
+            ossz += num;
+
+            if (num*2 == ossz )
+            {
+                perfect = true;
+            }
+
+            if (perfect)
+            {
+                Console.WriteLine("A szám tökéletes");
+            }
+            else
+            {
+                Console.WriteLine("A szám tökéletlen");
+            }
+            
+            Console.WriteLine();
+        }
+
+        static void F20Hatvany()
+        {
+            Console.WriteLine("F19");
         }
     }
 }
