@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace Hexaprog
 {
@@ -24,8 +25,11 @@ namespace Hexaprog
             F15KiIras();
             F16Kiiras();
             F17OsztoKiiras();
-            F18OsztoOssz();*/
+            F18OsztoOssz();
             F19Perfect();
+            F20Hatvany();
+            F21Pozitiv();*/
+            F22Tizossze();
         }
         static void F1Hello()
         {
@@ -38,14 +42,14 @@ namespace Hexaprog
             Console.WriteLine("F1 Köszönés:");
             Console.Write("Mi a neved: ");
             string name = Console.ReadLine()!;
-            Console.WriteLine($"Szia {name}");
+            Console.WriteLine($"Szia {name}!");
             Console.WriteLine();
 
         }
 
-        static double BeDouble()
+        static double BeDouble(string ask)
         {
-            Console.Write("Kérek egy számot: ");
+            Console.Write(ask);
             double? num = null;
             do
             {
@@ -56,7 +60,7 @@ namespace Hexaprog
                 }
                 catch (FormatException)
                 {
-                    Console.Write("Nem megfelelő formátum ad meg újra: ");
+                    Console.Write("Nem megfelelő formátum, add meg újra: ");
 
                 }
                 catch (OverflowException)
@@ -69,9 +73,9 @@ namespace Hexaprog
 
         }
 
-        static int BeInt()
+        static int BeInt(string ask)
         {
-            Console.Write("Kérek egy számot: ");
+            Console.Write(ask);
             int? num = null;
             do
             {
@@ -82,7 +86,7 @@ namespace Hexaprog
                 }
                 catch (FormatException)
                 {
-                    Console.Write("Nem megfelelő formátum ad meg újra: ");
+                    Console.Write("Nem megfelelő formátum, add meg újra: ");
 
                 }
                 catch (OverflowException)
@@ -98,7 +102,7 @@ namespace Hexaprog
         static void F3Dupla()
         {
             Console.WriteLine("F2 Egy szám duplázása: ");
-            double num = BeDouble();
+            double num = BeDouble("Adj meg egy számot: ");
 
             Console.WriteLine($"Ennek a kétszerese: {num * 2}");
             Console.WriteLine();
@@ -107,8 +111,8 @@ namespace Hexaprog
         static void F4Szamolasok()
         {
             Console.WriteLine("F3 Két szám öszsege, különbsége, szorzata és hányadosa: ");
-            double num1 = BeDouble();
-            double num2 = BeDouble();
+            double num1 = BeDouble("Add meg az első számot: ");
+            double num2 = BeDouble("Add meg a második számot: ");
 
             Console.WriteLine($"Az összegük: {num1 + num2}");
             Console.WriteLine($"A különbségük: {num1 - num2}");
@@ -125,8 +129,8 @@ namespace Hexaprog
         static void F5Nagyobb()
         {
             Console.WriteLine("F4 Két szám közül melyik a nagyobbb: ");
-            int num1 = BeInt();
-            int num2 = BeInt();
+            int num1 = BeInt("Adj meg egy számot: ");
+            int num2 = BeInt("Adj meg még egy számot: ");
 
             if (num1 > num2)
             {
@@ -147,7 +151,7 @@ namespace Hexaprog
         static void F6Kissebb()
         {
             Console.WriteLine("F5 Hároms szám közül a legikissebb: ");
-            int[] nums = { BeInt(), BeInt(), BeInt() };
+            int[] nums = { BeInt("Adj meg egy számot: "), BeInt("Adj meg még egy számot: "), BeInt("Adj meg egy harmadik számot: ") };
 
             Console.WriteLine($"A leg kisebb szám: {nums.Min()}");
 
@@ -157,7 +161,7 @@ namespace Hexaprog
         static void F7Haromszog()
         {
             Console.WriteLine("F6 A három megadott oldalhosszból rajzolható-e háromszög: ");
-            int[] sides = { BeInt(), BeInt(), BeInt() };
+            int[] sides = { BeInt("Add meg az első oldal hoszát: "), BeInt("Add meg a második oldal hosszát: "), BeInt("Add meg a harmadik oldal hosszát is: ") };
             bool possible = false;
 
             if (sides[0] + sides[1] > sides[2] && sides[1] + sides[2] > sides[0] && sides[2] + sides[0] > sides[1])
@@ -180,7 +184,7 @@ namespace Hexaprog
         static void F8Kozep()
         {
             Console.WriteLine("F7 Megadja két szám számtani és mértani közepét: ");
-            int[] nums = { BeInt(), BeInt() };
+            int[] nums = { BeInt("Adj meg egy számot: "), BeInt("Adj meg még egy számot: ") };
             int num = nums[0] * nums[1];
 
             Console.WriteLine($"Számtani közepük: {(nums[0] + nums[1]) / 2}");
@@ -200,7 +204,7 @@ namespace Hexaprog
         static void F9Egyenlet()
         {
             Console.WriteLine("F8 Megmondja, hogy egy másodfokú egyenlet három tagjából meg lehet-e oldani az egyenletett.");
-            int[] nums = { BeInt(), BeInt(), BeInt() };
+            int[] nums = { BeInt("Add meg az első tagot: "), BeInt("Add meg a második tagot: "), BeInt("Add meg a hatmadik tagot is: ") };
             int num = nums[1] * nums[1] * -4 * nums[0] * nums[2];
             bool possible = false;
 
@@ -224,7 +228,7 @@ namespace Hexaprog
         static void F10EgyenletMegoldas()
         {
             Console.WriteLine("F9 Megoldja a másodfokú egyenletet.");
-            int[] nums = { BeInt(), BeInt(), BeInt() };
+            int[] nums = { BeInt("Add meg az első tagot: "), BeInt("Add meg a második tagot: "), BeInt("Add meg a harmadik tagot is: ") };
             int num = nums[1] * nums[1] * -4 * nums[0] * nums[2];
             bool possible = false;
 
@@ -248,13 +252,13 @@ namespace Hexaprog
 
         static void F11Atfogo()
         {
-            Console.WriteLine("F10 A két befogóból kiszámolja az átfogót egy derékszögű háromszögben");
-            double[] nums = { BeDouble(), BeDouble() };
+            Console.WriteLine("F10 A két befogóból kiszámolja az átfogót egy derékszögű háromszögben.");
+            double[] nums = { BeDouble("Add meg az első befogó hosszát: "), BeDouble("Add meg a második befogó hosszát: ") };
             while (nums[0] < 0 && nums[1] < 0)
             {
                 Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
-                nums[0] = BeDouble();
-                nums[1] = BeDouble();
+                nums[0] = BeDouble("Add meg az első befogó hosszát: ");
+                nums[1] = BeDouble("Add meg a második befogó hosszát: ");
             }
             Console.WriteLine($"Az átfogó hossza: {Math.Round(Math.Sqrt(Math.Pow(nums[0], 2) + Math.Pow(nums[1], 2)), 2)}");
             Console.WriteLine();
@@ -262,26 +266,28 @@ namespace Hexaprog
 
         static void F12Teglatest()
         {
-            Console.WriteLine("F11 Téglatest felszíne és térfogata");
-            double[] sides = { BeDouble(), BeDouble(), BeDouble() };
-            while (sides[0] < 0 && sides[1] < 0)
+            Console.WriteLine("F11 Kiszámolja a téglatest felszínét és térfogatát a három oldalból.");
+            double[] sides = { BeDouble("Add meg az első oldal hoszát: "), BeDouble("Add meg a második oldal hoszát: "), BeDouble("Add meg a harmadik oldal hoszát is: ") };
+            while (sides[0] < 0 && sides[1] < 0 && sides[2] < 0)
             {
                 Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
-                sides[0] = BeDouble();
-                sides[1] = BeDouble();
+                sides[0] = BeDouble("Add meg az első oldal hoszát: ");
+                sides[1] = BeDouble("Add meg a második oldal hoszát: ");
+                sides[1] = BeDouble("Add meg a harmadik oldal hoszát is: ");
             }
             Console.WriteLine($"A téglatest felszíne: {2 * (sides[1] * sides[0] + sides[1] * sides[2] + sides[1] * sides[2])}");
             Console.WriteLine($"A téglatest térfogata: {sides[1] * sides[0] * sides[2]}");
+            Console.WriteLine();        
         }
 
         static void F13KorKer()
         {
-            Console.WriteLine("F12 Megadja a kör átmárőjét és megadja a kör területét és kerületét");
-            double d = BeDouble();
+            Console.WriteLine("F12 Kiszámolja a kör átmárőjéből a kör területét és kerületét.");
+            double d = BeDouble("Add meg a kör átmérőjét: ");
             while (d < 0)
             {
-                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
-                d = BeDouble();
+                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra. ");
+                d = BeDouble("Add meg a kör átmérőjét: ");
             }
             Console.WriteLine($"A kör kerülete: {d * Math.PI}");
             Console.WriteLine($"A kör területe: {Math.Pow(d / 2, 2) * Math.PI}");
@@ -290,27 +296,28 @@ namespace Hexaprog
         
         static void F14Korcikk()
         {
-            Console.WriteLine("F13 Kiszámolja a körcikk sugarából és a központi sögéből a területét és a határoló ív hosszát");
-            double r = BeDouble();
-            double a = BeDouble();
+            Console.WriteLine("F13 Kiszámolja a körcikk sugarából és a központi sögéből a területét és a határoló ív hosszát.");
+            double r = BeDouble("Add meg a körcikk sugarát: ");
+            double a = BeDouble("Add meg a központi szöget: ");
             while (a < 0 && r < 0)
             {
-                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
-                a = BeDouble();
-                r = BeDouble();
+                Console.WriteLine($"Nem lehet negatív, add meg újra. ");
+                a = BeDouble("Add meg a körcikk sugarát: ");
+                r = BeDouble("Add meg a központi szöget: ");
             }
             Console.WriteLine($"A körcik területe: {(a/360)*Math.Pow(r,2)*Math.PI}");
             Console.WriteLine($"A körív hossza: {r * a}");
+            Console.WriteLine();
         }
 
         static void F15KiIras()
         {
-            Console.WriteLine("F14 A bekért egész számig kiírja az üsszes számot addig");
-            int num = BeInt();
+            Console.WriteLine("F14 A bekért egész számig kiírja az összes számot addig.");
+            int num = BeInt("Adj meg egy számot: ");
             while (num < 0)
             {
-                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
-                num = BeInt();
+                Console.WriteLine($"Nem lehet negatív, add meg újra: ");
+                num = BeInt("Adj emg egy számot: ");
             }
             for (int i = 0; i < num - 1; i++)
             {
@@ -322,12 +329,12 @@ namespace Hexaprog
 
         static void F16Kiiras()
         {
-            Console.WriteLine("F15 A bekért egész számig kiírja az összes számot addig");
-            int num = BeInt();
+            Console.WriteLine("F15 A bekért egész számig kiírja az összes számot addig.");
+            int num = BeInt("Adj meg egy számot: ");
             while (num < 0)
             {
-                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
-                num = BeInt();
+                Console.WriteLine($"Nem lehet negatív, add meg újra: ");
+                num = BeInt("Adj meg egy számot: ");
             }
             for (int i = 0; i < num; i++)
             {
@@ -339,11 +346,11 @@ namespace Hexaprog
         static void F17OsztoKiiras()
         {
             Console.WriteLine("F16 A bekért egész számig kiírja az osztóit");
-            int num = BeInt();
+            int num = BeInt("Adj meg egy számot: ");
             while (num < 0)
             {
-                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
-                num = BeInt();
+                Console.WriteLine($"Nem lehet negatív, add meg újra: ");
+                num = BeInt("Adj meg egy számot: ");
             }
             for (int i = 1; i < num+1/2; i++)
             {
@@ -359,12 +366,12 @@ namespace Hexaprog
         static void F18OsztoOssz()
         {
             Console.WriteLine("F17 A bekért egész számig kiírja az osztóinak az összegét");
-            int num = BeInt();
+            int num = BeInt("Adj meg egy számot: ");
             long ossz = 0;
             while (num < 0)
             {
-                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
-                num = BeInt();
+                Console.WriteLine($"Nem lehet negatív, add meg újra: ");
+                num = BeInt("Adj meg egy számot: ");
             }
             for (int i = 1; i < num+1 / 2; i++)
             {
@@ -379,14 +386,14 @@ namespace Hexaprog
         }
         static void F19Perfect()
         {
-            Console.WriteLine("F18 A bekért egész számot és megállapítja róla, hogy tökéletes-e.");
-            int num = BeInt();
+            Console.WriteLine("F18 A bekér egy egész számot és megállapítja róla, hogy tökéletes-e.");
+            int num = BeInt("Adj meg egy számot: ");
             long ossz = 0;
             bool perfect = false;
             while (num < 0)
             {
-                Console.WriteLine($"Nem lehet negatív hosszúságú, add meg újra: ");
-                num = BeInt();
+                Console.WriteLine($"Nem lehet negatív, add meg újra: ");
+                num = BeInt("Adj meg egy számot: ");
             }
             for (int i = 1; i < num + 1 / 2; i++)
             {
@@ -418,7 +425,59 @@ namespace Hexaprog
 
         static void F20Hatvany()
         {
-            Console.WriteLine("F19");
+            Console.WriteLine("F19 Bekér egy hatványalapot és egy hatványkitevőt, aztán kiírja az eredményt: ");
+            double num = BeDouble("Add meg a hatványalapot: ");
+            double pow = BeDouble("Add emg a hatványkitevőt: ");
+            Console.WriteLine($"Az eredmény: {Math.Pow(num,pow)}");
+        }
+
+        static void F21Pozitiv()
+        {
+            Console.WriteLine("F20 Csak akkor veszi be ha pozitív");
+            bool sucsess = false;
+            double num;
+            do
+            {
+                num = BeDouble("Adj meg egy számot");
+                if (num > 0)
+                {
+                    sucsess = true;
+                }
+                else
+                {
+                    Console.WriteLine("A számnak pozitívnak kell lennie!");
+                }
+            } while (!sucsess);
+            Console.WriteLine(num);
+        }
+        static void F22Tizossze()
+        {
+            Console.WriteLine("F21 Összeadja a számokat addid amíg tíznél kissebbek: ");
+            double num  = BeDouble("Adj emg egy számot: "); ;
+            double sum = 0;
+            while (num < 10)
+            {
+                sum += num;
+                num = BeDouble("Adj emg egy számot: ");
+            }
+            Console.WriteLine($"A számok öszege: {sum}");
+        }
+
+        static void F23Osztas()
+        {
+            Console.WriteLine("F22 Beolvas egy egész számot, majd elosztja 2-vel annyiszor,\r\nahányszor lehet és közben felírja a számot a kettes számok szorzataként\r\nmegszorozva egy olyan számmal, amely már nem osztható 2-vel.");
+            int num = BeInt("Adj meg egy számot: ");
+            int buffer = num;
+            int count = 0;
+            while (num % 2 == 0)
+            {
+                count++;
+                num = num / 2;
+            }
+            if (count > 0)
+            {
+                
+            }
         }
     }
 }
