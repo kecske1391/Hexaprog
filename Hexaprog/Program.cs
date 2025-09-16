@@ -429,6 +429,7 @@ namespace Hexaprog
             double num = BeDouble("Add meg a hatványalapot: ");
             double pow = BeDouble("Add emg a hatványkitevőt: ");
             Console.WriteLine($"Az eredmény: {Math.Pow(num,pow)}");
+            Console.WriteLine();
         }
 
         static void F21Pozitiv()
@@ -449,6 +450,7 @@ namespace Hexaprog
                 }
             } while (!sucsess);
             Console.WriteLine(num);
+            Console.WriteLine();
         }
         static void F22Tizossze()
         {
@@ -461,6 +463,7 @@ namespace Hexaprog
                 num = BeDouble("Adj emg egy számot: ");
             }
             Console.WriteLine($"A számok öszege: {sum}");
+            Console.WriteLine();
         }
 
         static void F23Osztas()
