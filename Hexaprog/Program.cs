@@ -28,8 +28,14 @@ namespace Hexaprog
             F18OsztoOssz();
             F19Perfect();
             F20Hatvany();
-            F21Pozitiv();*/
+            F21Pozitiv();
             F22Tizossze();
+            F23Osztas();
+            F24Alma();
+            F25HaromOsztas();
+            F26Prim();
+            F27PrimIras();
+            F28PrimOszt();*/
         }
         static void F1Hello()
         {
@@ -277,7 +283,7 @@ namespace Hexaprog
             }
             Console.WriteLine($"A téglatest felszíne: {2 * (sides[1] * sides[0] + sides[1] * sides[2] + sides[1] * sides[2])}");
             Console.WriteLine($"A téglatest térfogata: {sides[1] * sides[0] * sides[2]}");
-            Console.WriteLine();        
+            Console.WriteLine();
         }
 
         static void F13KorKer()
@@ -293,7 +299,7 @@ namespace Hexaprog
             Console.WriteLine($"A kör területe: {Math.Pow(d / 2, 2) * Math.PI}");
             Console.WriteLine();
         }
-        
+
         static void F14Korcikk()
         {
             Console.WriteLine("F13 Kiszámolja a körcikk sugarából és a központi sögéből a területét és a határoló ív hosszát.");
@@ -305,11 +311,11 @@ namespace Hexaprog
                 a = BeDouble("Add meg a körcikk sugarát: ");
                 r = BeDouble("Add meg a központi szöget: ");
             }
-            Console.WriteLine($"A körcik területe: {(a/360)*Math.Pow(r,2)*Math.PI}");
+            Console.WriteLine($"A körcik területe: {(a / 360) * Math.Pow(r, 2) * Math.PI}");
             Console.WriteLine($"A körív hossza: {r * a}");
             Console.WriteLine();
         }
-
+        //Ha hiányzik a hosszú i vagy rövid van a helyén az azért van mert nincs a billenttyűzetemen.
         static void F15KiIras()
         {
             Console.WriteLine("F14 A bekért egész számig kiírja az összes számot addig.");
@@ -323,7 +329,7 @@ namespace Hexaprog
             {
                 Console.Write($"{i} ");
             }
-            Console.Write($"{num- 1}");
+            Console.Write($"{num - 1}");
             Console.WriteLine();
         }
 
@@ -352,13 +358,13 @@ namespace Hexaprog
                 Console.WriteLine($"Nem lehet negatív, add meg újra: ");
                 num = BeInt("Adj meg egy számot: ");
             }
-            for (int i = 1; i < num+1/2; i++)
+            for (int i = 1; i < num + 1 / 2; i++)
             {
                 if (num % i == 0)
                 {
                     Console.WriteLine($"{i} ");
                 }
-                
+
             }
             Console.WriteLine(num);
             Console.WriteLine();
@@ -373,7 +379,7 @@ namespace Hexaprog
                 Console.WriteLine($"Nem lehet negatív, add meg újra: ");
                 num = BeInt("Adj meg egy számot: ");
             }
-            for (int i = 1; i < num+1 / 2; i++)
+            for (int i = 1; i < num + 1 / 2; i++)
             {
                 if (num % i == 0)
                 {
@@ -406,7 +412,7 @@ namespace Hexaprog
 
             ossz += num;
 
-            if (num*2 == ossz )
+            if (num * 2 == ossz)
             {
                 perfect = true;
             }
@@ -419,7 +425,7 @@ namespace Hexaprog
             {
                 Console.WriteLine("A szám tökéletlen");
             }
-            
+
             Console.WriteLine();
         }
 
@@ -428,7 +434,7 @@ namespace Hexaprog
             Console.WriteLine("F19 Bekér egy hatványalapot és egy hatványkitevőt, aztán kiírja az eredményt: ");
             double num = BeDouble("Add meg a hatványalapot: ");
             double pow = BeDouble("Add emg a hatványkitevőt: ");
-            Console.WriteLine($"Az eredmény: {Math.Pow(num,pow)}");
+            Console.WriteLine($"Az eredmény: {Math.Pow(num, pow)}");
             Console.WriteLine();
         }
 
@@ -455,7 +461,7 @@ namespace Hexaprog
         static void F22Tizossze()
         {
             Console.WriteLine("F21 Összeadja a számokat addid amíg tíznél kissebbek: ");
-            double num  = BeDouble("Adj emg egy számot: "); ;
+            double num = BeDouble("Adj emg egy számot: "); ;
             double sum = 0;
             while (num < 10)
             {
@@ -465,6 +471,8 @@ namespace Hexaprog
             Console.WriteLine($"A számok öszege: {sum}");
             Console.WriteLine();
         }
+
+
 
         static void F23Osztas()
         {
@@ -477,10 +485,108 @@ namespace Hexaprog
                 count++;
                 num = num / 2;
             }
-            if (count > 0)
+
+            //Console.WriteLine($"{buffer} = " + "2 * " * count + $"{num}");
+            Console.WriteLine();
+        }
+
+        static void F24Alma()
+        {
+            Console.WriteLine("F23 Bekér egy szót és csak akkor fogadja el ha az a szó alma");
+            string text = "";
+            do
             {
-                
+                Console.Write("Írd be, hogy alma : ");
+                text = Console.ReadLine()!;
+            } while (text != "alma");
+            Console.WriteLine("Az alma gyümölcs");
+            Console.WriteLine();
+        }
+
+        static void F25HaromOsztas()
+        {
+            Console.WriteLine("F24 Bekér egy egész számot és kiirja azt három szorzataként");
+            int num = BeInt("Adj meg egy egész számot: ");
+            int buffer = num;
+            int buffer2 = 0;
+            int count = 0;
+            while (num % 3 == 0)
+            {
+                count++;
+                num = num / 3;
             }
+
+            buffer2 = num % 3;
+
+            Console.WriteLine($"{buffer} = " + $"{count} * 3" + $"+ {buffer2}");
+            Console.WriteLine();
+        }
+
+        static bool F26Prim(double num)
+        {
+            double sqrt = Math.Round(Math.Sqrt(num));
+            bool prime = true;
+            for (int i = 0; i <= sqrt; i++)
+            {
+                if (num % i == 0)
+                {
+                    prime = false;
+                }
+            }
+
+            if (prime)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        static void F27PrimIras()
+        {
+            Console.WriteLine("F25 Bekér egy számot és kiirja odáig a prim számokat");
+            int num = BeInt("Adj meg egy számot: ");
+            for (int i = 0; i <= Math.Sqrt(num); i++)
+            {
+                if (F26Prim(i))
+                {
+                    Console.WriteLine(i);
+                }
+            }
+            Console.WriteLine();
+        }
+
+        static void F28PrimOszt()
+        {
+            Console.WriteLine("F26 Bekér egy számot és kiirja a prim osztóit");
+            int num = BeInt("Adj meg egy számot: ");
+            for (int i = 0; i <= Math.Sqrt(num); i++)
+            {
+                if (F26Prim(i) && num % i == 0)
+                {
+                    Console.WriteLine(i);
+                }
+            }
+            Console.WriteLine();
+        }
+
+        static void F29PrimFelsoztas()
+        {
+            Console.WriteLine("F27 Bekér egy számot kiirja a primtényezős felbontását");
+            double num = BeDouble("Adj meg egy számot: ");
+            for (double i = Math.Sqrt(num); i >= 0; i++)
+            {
+                if (F26Prim(i) && num % i == 0)
+                {
+                    num = num / i;
+                    Console.WriteLine($"{i}*");
+                    i = Math.Sqrt(num);
+                }
+            }
+            Console.WriteLine(num);
+            Console.WriteLine();
         }
     }
 }
