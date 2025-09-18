@@ -8,41 +8,44 @@ namespace Hexaprog
 
         static void Main(string[] args)
         {
-            /*F1Hello();
-            F2Hi();
-            F3Dupla();
-            F4Szamolasok();
-            F5Nagyobb();
-            F6Kissebb();
-            F7Haromszog();
-            F8Kozep();
-            F9Egyenlet();
-            F10EgyenletMegoldas();
-            F11Atfogo();
-            F12Teglatest();
-            F13KorKer();
-            F14Korcikk();
-            F15KiIras();
-            F16Kiiras();
-            F17OsztoKiiras();
-            F18OsztoOssz();
-            F19Perfect();
-            F20Hatvany();
-            F21Pozitiv();
-            F22Tizossze();
-            F23Osztas();
-            F24Alma();
-            F25HaromOsztas();
-            F26Prim();
-            F27PrimIras();
-            F28PrimOszt();
-            F29PrimFelsoztas();
-            F30LNKO();
-            F31LKKT();
-            F32Szorzotabla();
-            F33Osszegtabla();
-            F34Special();
-            F35ASCII();*/
+            //F1Hello();
+            //F2Hi();
+            //F3Dupla();
+            //F4Szamolasok();
+            //F5Nagyobb();
+            //F6Kissebb();
+            //F7Haromszog();
+            //F8Kozep();
+            //F9Egyenlet();
+            //F10EgyenletMegoldas();
+            //F11Atfogo();
+            //F12Teglatest();
+            //F13KorKer();
+            //F14Korcikk();
+            //F15KiIras();
+            //F16Kiiras();
+            //F17OsztoKiiras();
+            //F18OsztoOssz();
+            //F19Perfect();
+            //F20Hatvany();
+            //F21Pozitiv();
+            //F22Tizossze();
+            //F23Osztas();
+            //F24Alma();
+            //F25HaromOsztas();
+            //F26Prim();
+            //F27PrimIras();
+            //F28PrimOszt();
+            //F29PrimFelsoztas();
+            //F30LNKO();
+            //F31LKKT();
+            //F32Szorzotabla();
+            //F33Osszegtabla();
+            //F34Special();
+            //F35ASCII();
+            //F36XO();
+            //F37Csillag();
+            F38CsillagHaromszog();
 
 
         }
@@ -768,14 +771,78 @@ namespace Hexaprog
             }
         }
 
+        static char Simbolchange(char simbol)
+        {
+            if (simbol == 'X')
+            {
+                simbol = 'O';
+            }
+            else
+            {
+                simbol = 'X';
+            }
+            return simbol;
+        }
         static void F36XO()
         {
             Console.WriteLine("F34 Bekéri a sorok és oszlopok számát és sormintát ír");
-            int line = BeInt("Add meg a sorok számát: ");
-            int coul = BeInt("Add emg az oszlopok számát");
-            for (int i = 0; i <= coul; i++)
+            int line = BeInt("Add meg az oszlopok számát: ");
+            int coul = BeInt("Add meg a sorok számát: ");
+            char simbol = 'X';
+            for (int i = 1; i <= coul; i++)
             {
-                
+                if (i % 2 == 0)
+                {
+                    simbol = 'O';
+                }
+                else
+                {
+                    simbol = 'X';
+                }
+                for (int j = 1; j <= line; j++)
+                {
+
+                    Console.Write(simbol);
+                    simbol = Simbolchange(simbol);
+                }
+                Console.WriteLine();
+            }
+        }
+
+        static void F37Csillag()
+        {
+            Console.WriteLine("F35 Bekér egy számot és annyi csillagot ír ki fokozatosan sorokba");
+            int num = BeInt("Adj meg egy számot: ");
+            for (int i = 1; i <= num; i++)
+            {
+                for (int j = 1; j <= i; j++)
+                {
+                    Console.Write("*");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        static void F38CsillagHaromszog()
+        {
+            Console.WriteLine("F36 Bekér egy számot és egy akkor csillag háromszöget rajzol");
+            int num = BeInt("Adj meg egy számot: ");
+            for (int i = 1; i <= num; i++)
+            {
+                for (int k = 0; k < num - i; k++)
+                {
+                    Console.Write(" ");
+                }
+                for (int k = 0; k < 2 * i + 1; k++)
+                {
+                    Console.WriteLine("*");
+                }
+                for (int k = 0; k < num - i; k++)
+                {
+                    Console.Write(" ");
+                }
+                Console.WriteLine();
+
             }
         }
     }
