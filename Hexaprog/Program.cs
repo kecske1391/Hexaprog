@@ -35,7 +35,16 @@ namespace Hexaprog
             F25HaromOsztas();
             F26Prim();
             F27PrimIras();
-            F28PrimOszt();*/
+            F28PrimOszt();
+            F29PrimFelsoztas();
+            F30LNKO();
+            F31LKKT();
+            F32Szorzotabla();
+            F33Osszegtabla();
+            F34Special();
+            F35ASCII();*/
+
+
         }
         static void F1Hello()
         {
@@ -526,7 +535,7 @@ namespace Hexaprog
         {
             double sqrt = Math.Round(Math.Sqrt(num));
             bool prime = true;
-            for (int i = 0; i <= sqrt; i++)
+            for (int i = 2; i <= sqrt; i++)
             {
                 if (num % i == 0)
                 {
@@ -576,17 +585,198 @@ namespace Hexaprog
         {
             Console.WriteLine("F27 Bekér egy számot kiirja a primtényezős felbontását");
             double num = BeDouble("Adj meg egy számot: ");
-            for (double i = Math.Sqrt(num); i >= 0; i++)
+            for (int i = 2; i <= num; i++)
             {
-                if (F26Prim(i) && num % i == 0)
+                if (F26Prim(i) && num % i == 0.0)
                 {
                     num = num / i;
-                    Console.WriteLine($"{i}*");
-                    i = Math.Sqrt(num);
+                    Console.Write($"{i}*");
+                    i = 2;
                 }
             }
             Console.WriteLine(num);
             Console.WriteLine();
+        }
+
+        static void F30LNKO()
+        {
+            Console.WriteLine("F28 Bekér két számot és kiírja a legnagyobb közös osztóját");
+            double num1 = BeDouble("Adj meg egy számot: ");
+            double num2 = BeDouble("Adj emg egy másik számot: ");
+            double buffer = 0;
+            if (num1 < num2)
+            {
+                for (double i = 1; i <= num1; i++)
+                {
+                    if (num1 % i == 0 && num2 % i == 0)
+                    {
+                        buffer = i;
+                    }
+                }
+                Console.WriteLine($"AZ LNKO {buffer}");
+            }
+            else if (num2 < num1)
+            {
+                for (double i = 1; i <= num2; i++)
+                {
+                    if (num1 % i == 0 && num2 % i == 0)
+                    {
+                        buffer = i;
+                    }
+                }
+                Console.WriteLine($"Az LNKO {buffer}");
+            }
+            else
+            {
+                Console.WriteLine($"Az LNKO: {num1}");
+            }
+
+        }
+
+        static double LNKO(double num1, double num2)
+        {
+            Console.WriteLine("F28 Bekér két számot és kiírja a legnagyobb közös osztóját");
+            double buffer = 0;
+            if (num1 < num2)
+            {
+                for (double i = 1; i <= num1; i++)
+                {
+                    if (num1 % i == 0 && num2 % i == 0)
+                    {
+                        buffer = i;
+                    }
+                }
+                return buffer;
+            }
+            else if (num2 < num1)
+            {
+                for (double i = 1; i <= num2; i++)
+                {
+                    if (num1 % i == 0 && num2 % i == 0)
+                    {
+                        buffer = i;
+                    }
+                }
+                return buffer;
+            }
+            else
+            {
+                return num1;
+            }
+        }
+
+        static void F31LKKT()
+        {
+            Console.WriteLine("F29 Megmondja két szám legkissebb közös többszörösét");
+            double num1 = BeDouble("Adj emg egy számot: ");
+            double num2 = BeDouble("Adj emg még egy számot: ");
+            if (num1 != 0 && num2 != 0)
+            {
+                Console.WriteLine($"A LKKT: {(Math.Abs(num1 * num2)) / LNKO(num1, num2)}");
+            }
+            else
+            {
+                Console.WriteLine($"Nyilván nulla");
+            }
+        }
+
+        static void F32Szorzotabla()
+        {
+            Console.WriteLine("F30 Bekér egy számot és kiírja a hozzá tartozó szorzótáblát");
+            int num1 = BeInt("Adj emg egy számot: ");
+            Console.WriteLine("---------------------------------------------");
+            for (int i = 0; i <= 10; i++)
+            {
+                Console.Write($"{i} ");
+            }
+            Console.WriteLine();
+            Console.WriteLine("    __________________________________________");
+            for (int i = 1; i <= 10; i++)
+            {
+                Console.Write($"{num1 * i} |");
+                for (int j = 1; j <= 10; j++)
+                {
+
+                    Console.Write($" {num1 * i * j}");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        static void F33Osszegtabla()
+        {
+            Console.WriteLine("F31 Bekér egy számot és kiírja a hozzá tartozó összegtáblát");
+            int num1 = BeInt("Adj emg egy számot: ");
+            Console.WriteLine("---------------------------------------------");
+            for (int i = 0; i <= num1; i++)
+            {
+                Console.Write($"{i} ");
+            }
+            Console.WriteLine();
+            Console.WriteLine("   ___________________________________________");
+            for (int i = 0; i <= num1; i++)
+            {
+                Console.Write($"{num1 + i} |");
+                for (int j = 0; j <= num1; j++)
+                {
+
+                    Console.Write($" {num1 + (i + j)}");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        static void F34Special()
+        {
+            Console.WriteLine("F32 Bekér egy kétjegyű számpárt és megondja róla hogy speciális-e");
+
+            int num1 = BeInt("Adj meg egy számot: ");
+            int num2 = BeInt("Adj emg még egy számot: ");
+
+            int rnum1 = int.Parse($"{num1 / 10}{num1 % 10}");
+            int rnum2 = int.Parse($"{num2 / 10}{num2 % 10}");
+            bool special = false;
+
+            if (num1 * num2 == rnum1 * rnum2)
+            {
+                special = true;
+            }
+
+            if (special)
+            {
+                Console.WriteLine("A számpár speciális");
+            }
+            else
+            {
+                Console.WriteLine("A számpár nem speciális");
+            }
+        }
+
+        static void F35ASCII()
+        {
+            Console.WriteLine("F33 Kiírja a kisbetűket sé mellé az ASCII kódját");
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    if ((int)('a' + i + j * 10) <= (int)'z')
+                    {
+                        Console.Write($"{(char)('a' + i + j * 10)} {(int)('a' + i + j * 10)} ");
+                    }
+                }
+                Console.WriteLine();
+            }
+        }
+
+        static void F36XO()
+        {
+            Console.WriteLine("F34 Bekéri a sorok és oszlopok számát és sormintát ír");
+            int line = BeInt("Add meg a sorok számát: ");
+            int coul = BeInt("Add emg az oszlopok számát");
+            for (int i = 0; i <= coul; i++)
+            {
+                
+            }
         }
     }
 }
