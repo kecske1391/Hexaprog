@@ -1295,54 +1295,341 @@ namespace Hexaprog
             //Console.WriteLine($"A legkissebb páros szám: {}");
         }
 
+        static void Frame()
+        {
+            for (int i = 0; i < Console.WindowWidth; i++)
+            {
+                Console.SetCursorPosition(i, 1);
+                Console.Write('─');
+            }
+            for (int i = 1; i < Console.WindowHeight; i++)
+            {
+                if (i == 1)
+                {
+                    Console.SetCursorPosition(0, i);
+                    Console.Write('┌');
+                }
+                else if (i == Console.WindowHeight - 1)
+                {
+                    Console.SetCursorPosition(0, i);
+                    Console.Write('└');
+                }
+                else
+                {
+                    Console.SetCursorPosition(0, i);
+                    Console.Write('│');
+                }
+            }
+            for (int i = 1; i < Console.WindowHeight; i++)
+            {
+                if (i == 1)
+                {
+                    Console.SetCursorPosition(Console.WindowWidth - 1, i);
+                    Console.Write('┐');
+                }
+                else if (i == Console.WindowHeight - 1)
+                {
+                    Console.SetCursorPosition(Console.WindowWidth - 1, i);
+                    Console.Write('┘');
+                }
+                else
+                {
+                    Console.SetCursorPosition(Console.WindowWidth - 1, i);
+                    Console.Write('│');
+                }
+            }
+            for (int i = 1; i < Console.WindowWidth - 1; i++)
+            {
+                Console.SetCursorPosition(i, Console.WindowHeight - 1);
+                Console.Write('─');
+            }
+        }
+
+        static void Frame2()
+        {
+            for (int i = 0; i < Console.WindowWidth; i++)
+            {
+                if (i == 0)
+                {
+                    Console.Write('┌');
+                }
+                else if (i == Console.WindowWidth - 1)
+                {
+                    Console.Write('┐');
+                }
+                else
+                {
+                    Console.Write('─');
+                }
+            }
+            Console.WriteLine();
+            for (int i = 0; i < Console.WindowHeight - 2; i++)
+            {
+                Console.Write('│');
+                for (int j = 0; j < Console.WindowWidth - 2; j++)
+                {
+                    Console.Write(' ');
+                }
+                Console.Write("│ \n");
+            }
+
+            for (int i = 0; i < Console.WindowWidth; i++)
+            {
+                if (i == 0)
+                {
+                    Console.Write('└');
+                }
+                else if (i == Console.WindowWidth - 1)
+                {
+                    Console.Write('┘');
+                }
+                else
+                {
+                    Console.Write('─');
+                }
+            }
+        }
+
+        static char[] Canvas()
+        {
+            List<char> canvas = new List<char>();
+            for (int i = 0; i < Console.WindowWidth; i++)
+            {
+                if (i == 0)
+                {
+                    canvas.Add('┌');
+                }
+                else if (i == Console.WindowWidth - 1)
+                {
+                    canvas.Add('┐');
+                }
+                else
+                {
+                    canvas.Add('─');
+                }
+            }
+            canvas.Add('\n');
+            for (int i = 0; i < Console.WindowHeight - 2; i++)
+            {
+                canvas.Add('│');
+                for (int j = 0; j < Console.WindowWidth - 2; j++)
+                {
+                    canvas.Add(' ');
+                }
+                canvas.Add('│');
+                canvas.Add('\n');
+            }
+
+            for (int i = 0; i < Console.WindowWidth; i++)
+            {
+                if (i == 0)
+                {
+                    canvas.Add('└');
+                }
+                else if (i == Console.WindowWidth - 1)
+                {
+                    canvas.Add('┘');
+                }
+                else
+                {
+                    canvas.Add('─');
+                }
+            }
+            canvas.Add('\n');
+            return canvas.ToArray();
+        }
         static void Rajzolas()
         {
+            StreamWriter writer = new StreamWriter("rajz.txt");
+            writer.AutoFlush = true;
+            Console.SetOut(writer);
+            char[] ch = { '░', '▒', '▓', '█', ' ' };
+            (int, int) pos = (0, 0);
+            int intensity = 3;
+
+            //Console.SetCursorPosition(0, 0);
+            //Console.Write(ch[intensity]);
+            //Console.SetCursorPosition(3, 0);
+            //Console.Write('D');
+
+            char[] canvas = Canvas();
+
+            for (int i = 0; i < canvas.Length; i++)
+            {
+                Console.Write(canvas[i]);
+            }
+
+            //Frame2();
+
             Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
-            char ch = '█';
+            pos = Console.GetCursorPosition();
+
             while (Console.ReadKey().Key != ConsoleKey.Escape)
             {
                 ConsoleKey consoleKey = Console.ReadKey().Key;
                 switch (consoleKey)
                 {
                     case ConsoleKey.UpArrow:
-                        Console.Write(ch);
-                        Console.CursorTop--;
-                        Console.CursorLeft--;
+                        if (pos.Item2 > 2 && Console.CapsLock)
+                        {
+                            Console.Write(ch[intensity]);
+                            Console.CursorTop--;
+                            Console.CursorLeft--;
+                        }
+                        else if (pos.Item2 > 2)
+                        {
+                            Console.CursorTop--;
+                        }
+                        pos = Console.GetCursorPosition();
                         break;
                     case ConsoleKey.DownArrow:
-                        Console.Write(ch);
-                        Console.CursorTop++;
-                        Console.CursorLeft--;
-                        break;
+                      if (pos.Item2 < Console.WindowHeight && Console.CapsLock)
+                      {
+                          Console.Write(ch[intensity]);
+                          Console.CursorTop++;
+                          Console.CursorLeft--;
+                      }
+                      else if (pos.Item2 < Console.WindowHeight)
+                      {
+                          Console.CursorTop++;
+                      }
+                      pos = Console.GetCursorPosition();
+                      break;
                     case ConsoleKey.LeftArrow:
-                        Console.Write(ch);
-                        Console.CursorLeft--;
-                        Console.CursorLeft--;
-                        break;
+                      if (pos.Item1 > 1 && Console.CapsLock)
+                      {
+                          Console.Write(ch[intensity]);
+                          Console.CursorLeft--;
+                          Console.CursorLeft--;
+                      }
+                      else if (pos.Item1 > 1)
+                      {
+                          Console.CursorLeft--;
+                      }
+                      pos = Console.GetCursorPosition();
+                      break;
                     case ConsoleKey.RightArrow:
-                        Console.Write(ch);
-                        Console.CursorLeft++;
-                        Console.CursorLeft--;
-                        break;
+                      if (pos.Item1 < Console.WindowWidth && Console.CapsLock)
+                      {
+                          Console.Write(ch[intensity]);
+                          Console.CursorLeft++;
+                          Console.CursorLeft--;
+                      }
+                      else if (pos.Item1 < Console.WindowWidth)
+                      {
+                          Console.CursorLeft++;
+                      }
+                      pos = Console.GetCursorPosition();
+                      break;
                     case ConsoleKey.NumPad1:
-                        Console.ForegroundColor = ConsoleColor.White;
+                      Console.ForegroundColor = ConsoleColor.White;
+                      Console.SetCursorPosition(0, 0);
+
+                        Console.Write(ch[intensity]);
+                        Console.SetCursorPosition(pos.Item1, pos.Item2);
                         Console.CursorLeft--;
                         Console.Write(' ');
                         Console.CursorLeft--;
                         break;
                     case ConsoleKey.NumPad2:
                         Console.ForegroundColor = ConsoleColor.Red;
+                        Console.SetCursorPosition(0, 0);
+
+                        Console.Write(ch[intensity]);
+                        Console.SetCursorPosition(pos.Item1, pos.Item2);
                         Console.CursorLeft--;
                         Console.Write(' ');
                         Console.CursorLeft--;
+
+                        break;
+                    case ConsoleKey.NumPad3:
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.SetCursorPosition(0, 0);
+
+                       Console.Write(ch[intensity]);
+                       Console.SetCursorPosition(pos.Item1, pos.Item2);
+                       Console.CursorLeft--;
+                       Console.Write(' ');
+                       Console.CursorLeft--;
+
+                       break;
+                    case ConsoleKey.NumPad4:
+                       Console.ForegroundColor = ConsoleColor.Green;
+                       Console.SetCursorPosition(0, 0);
+
+                       Console.Write(ch[intensity]);
+                       Console.SetCursorPosition(pos.Item1, pos.Item2);
+                       Console.CursorLeft--;
+                       Console.Write(' ');
+                       Console.CursorLeft--;
+
+                       break;
+                    case ConsoleKey.E:
+                       if (intensity < 4)
+                       {
+                           intensity = 4;
+                           Console.SetCursorPosition(3, 0);
+                           Console.Write('E');
+                           Console.SetCursorPosition(pos.Item1, pos.Item2);
+                       }
+                       else
+                       {
+                           intensity = 3;
+                           Console.SetCursorPosition(3, 0);
+                           Console.Write('D');
+                           Console.SetCursorPosition(pos.Item1, pos.Item2);
+                       }
+                       Console.CursorLeft--;
+                       Console.Write(' ');
+                       Console.CursorLeft--;
+                       break;
+                    case ConsoleKey.R:
+                       Console.Clear();
+                       Console.SetCursorPosition(0, 0);
+                       Console.Write(ch[intensity]);
+                       Console.SetCursorPosition(3, 0);
+                       Console.Write('D');
+
+                       Frame();
+                       Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
+                       pos = Console.GetCursorPosition();
+                       Console.ForegroundColor = ConsoleColor.White;
+                       break;
+                    case ConsoleKey.Add:
+                       if (intensity < 3)
+                       {
+                           intensity++;
+                           Console.SetCursorPosition(0, 0);
+                           Console.Write(ch[intensity]);
+                           Console.SetCursorPosition(pos.Item1, pos.Item2);
+                       }
+                       Console.CursorLeft--;
+                       Console.Write(' ');
+                       Console.CursorLeft--;
+                       break;
+                    case ConsoleKey.Subtract:
+                       if (intensity > 0)
+                       {
+                           intensity--;
+                           Console.SetCursorPosition(0, 0);
+                           Console.Write(ch[intensity]);
+                           Console.SetCursorPosition(pos.Item1, pos.Item2);
+                       }
+                       Console.CursorLeft--;
+                       Console.Write(' ');
+                       Console.CursorLeft--;
+                       break;
+                    case ConsoleKey.Spacebar:
+                        canvas[(int)Math.Sqrt(pos.Item1 * Console.WindowWidth + pos.Item2)] = ch[intensity];
+                        pos = Console.GetCursorPosition();
+                        Console.CursorLeft--;
                         break;
                 }
-
-
-
-
-
-
+                Console.Clear();
+                for (int i = 0; i < canvas.Length; i++)
+                {
+                    Console.Write(canvas[i]);
+                }
             }
         }
     }
