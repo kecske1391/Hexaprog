@@ -1620,7 +1620,7 @@ namespace Hexaprog
                        Console.CursorLeft--;
                        break;
                     case ConsoleKey.Spacebar:
-                        canvas[(int)Math.Sqrt(pos.Item1 * Console.WindowWidth + pos.Item2)] = ch[intensity];
+                        canvas[(int)Math.Sqrt(pos.Item1 * Console.WindowWidth )+ pos.Item2] = ch[intensity];
                         pos = Console.GetCursorPosition();
                         Console.CursorLeft--;
                         break;
