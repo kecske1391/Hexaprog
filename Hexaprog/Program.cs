@@ -1,6 +1,8 @@
 ﻿using System.Globalization;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Hexaprog
 {
@@ -71,7 +73,7 @@ namespace Hexaprog
             //F59();
             //F60();
         }
-        static void F1()
+        /*static void F1()
         {
             Console.WriteLine("Hello world!");
             Console.WriteLine();
@@ -533,8 +535,6 @@ namespace Hexaprog
             Console.WriteLine($"A számok öszege: {sum}");
             Console.WriteLine();
         }
-
-
 
         static void F23()
         {
@@ -1294,7 +1294,7 @@ namespace Hexaprog
 
             //Console.WriteLine($"A legkissebb páros szám: {}");
         }
-
+        */
         static void Frame()
         {
             for (int i = 0; i < Console.WindowWidth; i++)
@@ -1363,14 +1363,14 @@ namespace Hexaprog
                 }
             }
             Console.WriteLine();
-            for (int i = 0; i < Console.WindowHeight - 2; i++)
+            for (int i = 0; i < Console.WindowHeight - 3; i++)
             {
                 Console.Write('│');
                 for (int j = 0; j < Console.WindowWidth - 2; j++)
                 {
                     Console.Write(' ');
                 }
-                Console.Write("│ \n");
+                Console.Write("│");
             }
 
             for (int i = 0; i < Console.WindowWidth; i++)
@@ -1438,40 +1438,204 @@ namespace Hexaprog
             canvas.Add('\n');
             return canvas.ToArray();
         }
+
+        static char[,] Canvas2()
+        {
+            char[,] canvas = new char[Console.WindowHeight, Console.WindowWidth];
+            for (int i = 0; i < Console.WindowHeight; i++)
+            {
+                if (i == 0)
+                {
+                    canvas[0, i] = '┌';
+                }
+                else if (i == Console.WindowHeight - 1)
+                {
+                    canvas[0, i] = '└';
+                }
+                else
+                {
+                    canvas[0, i] = '─';
+                }
+            }
+            for (int i = 1; i < Console.WindowWidth - 1; i++)
+            {
+                for (int j = 0; j < Console.WindowHeight; j++)
+                {
+                    if (j == 0)
+                    {
+                        canvas[j, i] = '─';
+                    }
+                    else if (j == Console.WindowHeight - 1)
+                    {
+                        canvas[j, i] = '─';
+                    }
+                    else
+                    {
+                        canvas[j, i] = ' ';
+                    }
+                }
+            }
+            for (int i = 0; i < Console.WindowHeight; i++)
+            {
+                if (i == 0)
+                {
+                    canvas[i, Console.WindowWidth - 1] = '┐';
+                }
+                else if (i == Console.WindowHeight - 1)
+                {
+                    canvas[i, Console.WindowWidth - 1] = '┘';
+                }
+                else
+                {
+                    canvas[i, Console.WindowWidth - 1] = '|';
+                }
+            }
+            for (int i = 1; i < Console.WindowHeight; i++)
+            {
+                if (i == Console.WindowHeight - 1)
+                {
+                    canvas[i, 0] = '└';
+                }
+                else
+                {
+                    canvas[i, 0] = '|';
+                }
+
+            }
+            return canvas;
+        }
+
+        static (char, int)[,] Canvas3()
+        {
+            (char, int)[,] canvas = new (char, int)[Console.WindowHeight, Console.WindowWidth];
+            for (int i = 0; i < Console.WindowHeight; i++)
+            {
+                if (i == 0)
+                {
+                    canvas[0, i] = ('┌',0);
+                }
+                else if (i == Console.WindowHeight - 1)
+                {
+                    canvas[0, i] = ('└', 0);
+                }
+                else
+                {
+                    canvas[0, i] = ('─', 0);
+                }
+            }
+            for (int i = 1; i < Console.WindowWidth - 1; i++)
+            {
+                for (int j = 0; j < Console.WindowHeight; j++)
+                {
+                    if (j == 0)
+                    {
+                        canvas[j, i] = ('─', 0);
+                    }
+                    else if (j == Console.WindowHeight - 1)
+                    {
+                        canvas[j, i] = ('─', 0);
+                    }
+                    else
+                    {
+                        canvas[j, i] = (' ', 0);
+                    }
+                }
+            }
+            for (int i = 0; i < Console.WindowHeight; i++)
+            {
+                if (i == 0)
+                {
+                    canvas[i, Console.WindowWidth - 1] = ('┐', 0);
+                }
+                else if (i == Console.WindowHeight - 1)
+                {
+                    canvas[i, Console.WindowWidth - 1] = ('┘', 0);
+                }
+                else
+                {
+                    canvas[i, Console.WindowWidth - 1] = ('|', 0);
+                }
+            }
+            for (int i = 1; i < Console.WindowHeight; i++)
+            {
+                if (i == Console.WindowHeight - 1)
+                {
+                    canvas[i, 0] = ('└', 0);
+                }
+                else
+                {
+                    canvas[i, 0] = ('|', 0);
+                }
+
+            }
+            return canvas;
+        }
+
+        static void Save(char[,] chars)
+        {
+            Stream stream = new FileStream("rajz.txt", FileMode.Truncate);
+            StreamWriter writer = new StreamWriter(stream);
+            writer.AutoFlush = true;
+            for (int i = 0; i < chars.GetLength(0); i++)
+            {
+                for (int j = 0; j < chars.GetLength(1); j++)
+                {
+                    writer.Write(chars[i, j]);
+                }
+                writer.WriteLine();
+            }
+            writer.Close();
+        }
+
+        //static char[] Load
         static void Rajzolas()
         {
-            StreamWriter writer = new StreamWriter("rajz.txt");
-            writer.AutoFlush = true;
-            Console.SetOut(writer);
+            //Stream stream = new FileStream("rajz.txt", FileMode.Truncate);
+            //File.Open("rajz.txt", FileMode.Truncate);
+            //StreamWriter writer = new StreamWriter(stream);
+            //writer.AutoFlush = true;
+            //Console.SetOut(writer);
             char[] ch = { '░', '▒', '▓', '█', ' ' };
             (int, int) pos = (0, 0);
             int intensity = 3;
+            int color = 0;
+            Console.SetCursorPosition(0, 0);
+            Console.Write(ch[intensity]);
+            Console.SetCursorPosition(3, 0);
+            Console.Write('D');
+            Console.WriteLine();
 
-            //Console.SetCursorPosition(0, 0);
-            //Console.Write(ch[intensity]);
-            //Console.SetCursorPosition(3, 0);
-            //Console.Write('D');
+            //char[,] canvas = Canvas2();
+            (char, int)[,] canvas = Canvas3();
 
-            char[] canvas = Canvas();
-
-            for (int i = 0; i < canvas.Length; i++)
+            /*for (int i = 0; i < canvas.Length; i++)
             {
                 Console.Write(canvas[i]);
-            }
+            }*/
 
-            //Frame2();
+            /*for (int i = 0; i < canvas.GetLength(0); i++)
+            {
+                for (int j = 0; j < canvas.GetLength(1); j++)
+                {
+                    Console.Write(canvas[i, j]);
+                }
+                Console.WriteLine();
+            }*/
+
+            Frame2();
 
             Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
             pos = Console.GetCursorPosition();
 
-            while (Console.ReadKey().Key != ConsoleKey.Escape)
+            while (Console.ReadKey(true).Key != ConsoleKey.Escape)
             {
-                ConsoleKey consoleKey = Console.ReadKey().Key;
+                ConsoleKey consoleKey = Console.ReadKey(true).Key;
                 switch (consoleKey)
                 {
                     case ConsoleKey.UpArrow:
                         if (pos.Item2 > 2 && Console.CapsLock)
                         {
+                            canvas[pos.Item2, pos.Item1] = (ch[intensity],color);
                             Console.Write(ch[intensity]);
                             Console.CursorTop--;
                             Console.CursorLeft--;
@@ -1483,48 +1647,49 @@ namespace Hexaprog
                         pos = Console.GetCursorPosition();
                         break;
                     case ConsoleKey.DownArrow:
-                      if (pos.Item2 < Console.WindowHeight && Console.CapsLock)
-                      {
-                          Console.Write(ch[intensity]);
-                          Console.CursorTop++;
-                          Console.CursorLeft--;
-                      }
-                      else if (pos.Item2 < Console.WindowHeight)
-                      {
-                          Console.CursorTop++;
-                      }
-                      pos = Console.GetCursorPosition();
-                      break;
+                        if (pos.Item2 < Console.WindowHeight && Console.CapsLock)
+                        {
+                            canvas[pos.Item2, pos.Item1] = ch[intensity];
+                            Console.Write(ch[intensity]);
+                            Console.CursorTop++;
+                            Console.CursorLeft--;
+                        }
+                        else if (pos.Item2 < Console.WindowHeight)
+                        {
+                            Console.CursorTop++;
+                        }
+                        pos = Console.GetCursorPosition();
+                        break;
                     case ConsoleKey.LeftArrow:
-                      if (pos.Item1 > 1 && Console.CapsLock)
-                      {
-                          Console.Write(ch[intensity]);
-                          Console.CursorLeft--;
-                          Console.CursorLeft--;
-                      }
-                      else if (pos.Item1 > 1)
-                      {
-                          Console.CursorLeft--;
-                      }
-                      pos = Console.GetCursorPosition();
-                      break;
+                        if (pos.Item1 > 1 && Console.CapsLock)
+                        {
+                            canvas[pos.Item2, pos.Item1] = ch[intensity];
+                            Console.Write(ch[intensity]);
+                            Console.CursorLeft--;
+                            Console.CursorLeft--;
+                        }
+                        else if (pos.Item1 > 1)
+                        {
+                            Console.CursorLeft--;
+                        }
+                        pos = Console.GetCursorPosition();
+                        break;
                     case ConsoleKey.RightArrow:
-                      if (pos.Item1 < Console.WindowWidth && Console.CapsLock)
-                      {
-                          Console.Write(ch[intensity]);
-                          Console.CursorLeft++;
-                          Console.CursorLeft--;
-                      }
-                      else if (pos.Item1 < Console.WindowWidth)
-                      {
-                          Console.CursorLeft++;
-                      }
-                      pos = Console.GetCursorPosition();
-                      break;
+                        if (pos.Item1 < Console.WindowWidth && Console.CapsLock)
+                        {
+                            canvas[pos.Item2, pos.Item1] = ch[intensity];
+                            Console.Write(ch[intensity]);
+                        }
+                        else if (pos.Item1 < Console.WindowWidth)
+                        {
+                            Console.CursorLeft++;
+                        }
+                        pos = Console.GetCursorPosition();
+                        break;
                     case ConsoleKey.NumPad1:
-                      Console.ForegroundColor = ConsoleColor.White;
-                      Console.SetCursorPosition(0, 0);
-
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.SetCursorPosition(0, 0);
+                        color = 0;
                         Console.Write(ch[intensity]);
                         Console.SetCursorPosition(pos.Item1, pos.Item2);
                         Console.CursorLeft--;
@@ -1534,7 +1699,7 @@ namespace Hexaprog
                     case ConsoleKey.NumPad2:
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.SetCursorPosition(0, 0);
-
+                        color = 1;
                         Console.Write(ch[intensity]);
                         Console.SetCursorPosition(pos.Item1, pos.Item2);
                         Console.CursorLeft--;
@@ -1545,91 +1710,103 @@ namespace Hexaprog
                     case ConsoleKey.NumPad3:
                         Console.ForegroundColor = ConsoleColor.Blue;
                         Console.SetCursorPosition(0, 0);
+                        color = 2;
+                        Console.Write(ch[intensity]);
+                        Console.SetCursorPosition(pos.Item1, pos.Item2);
+                        Console.CursorLeft--;
+                        Console.Write(' ');
+                        Console.CursorLeft--;
 
-                       Console.Write(ch[intensity]);
-                       Console.SetCursorPosition(pos.Item1, pos.Item2);
-                       Console.CursorLeft--;
-                       Console.Write(' ');
-                       Console.CursorLeft--;
-
-                       break;
+                        break;
                     case ConsoleKey.NumPad4:
-                       Console.ForegroundColor = ConsoleColor.Green;
-                       Console.SetCursorPosition(0, 0);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        color = 3;
+                        Console.SetCursorPosition(0, 0);
+                        Console.WriteLine();
+                        Console.Write(ch[intensity]);
+                        Console.SetCursorPosition(pos.Item1, pos.Item2);
+                        Console.CursorLeft--;
+                        Console.Write(' ');
+                        Console.CursorLeft--;
 
-                       Console.Write(ch[intensity]);
-                       Console.SetCursorPosition(pos.Item1, pos.Item2);
-                       Console.CursorLeft--;
-                       Console.Write(' ');
-                       Console.CursorLeft--;
-
-                       break;
+                        break;
                     case ConsoleKey.E:
-                       if (intensity < 4)
-                       {
-                           intensity = 4;
-                           Console.SetCursorPosition(3, 0);
-                           Console.Write('E');
-                           Console.SetCursorPosition(pos.Item1, pos.Item2);
-                       }
-                       else
-                       {
-                           intensity = 3;
-                           Console.SetCursorPosition(3, 0);
-                           Console.Write('D');
-                           Console.SetCursorPosition(pos.Item1, pos.Item2);
-                       }
-                       Console.CursorLeft--;
-                       Console.Write(' ');
-                       Console.CursorLeft--;
-                       break;
-                    case ConsoleKey.R:
-                       Console.Clear();
-                       Console.SetCursorPosition(0, 0);
-                       Console.Write(ch[intensity]);
-                       Console.SetCursorPosition(3, 0);
-                       Console.Write('D');
-
-                       Frame();
-                       Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
-                       pos = Console.GetCursorPosition();
-                       Console.ForegroundColor = ConsoleColor.White;
-                       break;
-                    case ConsoleKey.Add:
-                       if (intensity < 3)
-                       {
-                           intensity++;
-                           Console.SetCursorPosition(0, 0);
-                           Console.Write(ch[intensity]);
-                           Console.SetCursorPosition(pos.Item1, pos.Item2);
-                       }
-                       Console.CursorLeft--;
-                       Console.Write(' ');
-                       Console.CursorLeft--;
-                       break;
-                    case ConsoleKey.Subtract:
-                       if (intensity > 0)
-                       {
-                           intensity--;
-                           Console.SetCursorPosition(0, 0);
-                           Console.Write(ch[intensity]);
-                           Console.SetCursorPosition(pos.Item1, pos.Item2);
-                       }
-                       Console.CursorLeft--;
-                       Console.Write(' ');
-                       Console.CursorLeft--;
-                       break;
-                    case ConsoleKey.Spacebar:
-                        canvas[(int)Math.Sqrt(pos.Item1 * Console.WindowWidth )+ pos.Item2] = ch[intensity];
-                        pos = Console.GetCursorPosition();
+                        if (intensity < 4)
+                        {
+                            intensity = 4;
+                            Console.SetCursorPosition(3, 0);
+                            Console.Write('E');
+                            Console.SetCursorPosition(pos.Item1, pos.Item2);
+                        }
+                        else
+                        {
+                            intensity = 3;
+                            Console.SetCursorPosition(3, 0);
+                            Console.Write('D');
+                            Console.SetCursorPosition(pos.Item1, pos.Item2);
+                        }
+                        Console.CursorLeft--;
+                        Console.Write(' ');
                         Console.CursorLeft--;
                         break;
+                    case ConsoleKey.R:
+                        Console.Clear();
+                        Console.SetCursorPosition(0, 0);
+                        Console.Write(ch[intensity]);
+                        Console.SetCursorPosition(3, 0);
+                        Console.Write('D');
+                        Console.WriteLine();
+                        Frame2();
+                        Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
+                        pos = Console.GetCursorPosition();
+                        Console.ForegroundColor = ConsoleColor.White;
+                        break;
+                    case ConsoleKey.Add:
+                        if (intensity < 3)
+                        {
+                            intensity++;
+                            Console.SetCursorPosition(0, 0);
+                            Console.Write(ch[intensity]);
+                            Console.SetCursorPosition(pos.Item1, pos.Item2);
+                        }
+                        Console.CursorLeft--;
+                        Console.Write(' ');
+                        Console.CursorLeft--;
+                        break;
+                    case ConsoleKey.Subtract:
+                        if (intensity > 0)
+                        {
+                            intensity--;
+                            Console.SetCursorPosition(0, 0);
+                            Console.Write(ch[intensity]);
+                            Console.SetCursorPosition(pos.Item1, pos.Item2);
+                        }
+                        Console.CursorLeft--;
+                        Console.Write(' ');
+                        Console.CursorLeft--;
+                        break;
+                    case ConsoleKey.Spacebar:
+                        Console.CursorLeft--;
+                        canvas[pos.Item2, pos.Item1] = ch[intensity];
+                        Console.Write(ch[intensity]);
+                        pos = Console.GetCursorPosition();
+                        break;
+                    case ConsoleKey.S:
+                        Save(canvas);
+                        break;
+                    case ConsoleKey.L:
+                        break;
                 }
-                Console.Clear();
-                for (int i = 0; i < canvas.Length; i++)
+                //Console.Clear();
+                //File.Open("rajz.txt", FileMode.Truncate).Close();
+                /*for (int i = 0; i < canvas.GetLength(0); i++)
                 {
-                    Console.Write(canvas[i]);
-                }
+                    for (int j = 0; j < canvas.GetLength(1); j++)
+                    {
+                        writer.Write(canvas[i, j]);
+                    }
+                    writer.WriteLine();
+                }*/
             }
         }
     }
