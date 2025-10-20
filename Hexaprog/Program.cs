@@ -1507,113 +1507,211 @@ namespace Hexaprog
 
         static (char, int)[,] Canvas3()
         {
-            (char, int)[,] canvas = new (char, int)[Console.WindowHeight, Console.WindowWidth];
-            for (int i = 0; i < Console.WindowHeight; i++)
+            (char, int)[,] canvas = new (char, int)[Console.WindowHeight - 1, Console.WindowWidth];
+            for (int i = 0; i < canvas.GetLength(0); i++)
             {
                 if (i == 0)
                 {
-                    canvas[0, i] = ('┌',0);
+                    canvas[0, i] = ('┌', 15);
                 }
-                else if (i == Console.WindowHeight - 1)
+                else if (i == canvas.GetLength(0) - 1)
                 {
-                    canvas[0, i] = ('└', 0);
+                    canvas[0, i] = ('└', 15);
                 }
                 else
                 {
-                    canvas[0, i] = ('─', 0);
+                    canvas[0, i] = ('─', 15);
                 }
             }
-            for (int i = 1; i < Console.WindowWidth - 1; i++)
+            for (int i = 1; i < canvas.GetLength(1) - 1; i++)
             {
-                for (int j = 0; j < Console.WindowHeight; j++)
+                for (int j = 0; j < canvas.GetLength(0); j++)
                 {
                     if (j == 0)
                     {
-                        canvas[j, i] = ('─', 0);
+                        canvas[j, i] = ('─', 15);
                     }
-                    else if (j == Console.WindowHeight - 1)
+                    else if (j == canvas.GetLength(0) - 1)
                     {
-                        canvas[j, i] = ('─', 0);
+                        canvas[j, i] = ('─', 15);
                     }
                     else
                     {
-                        canvas[j, i] = (' ', 0);
+                        canvas[j, i] = (' ', 15);
                     }
                 }
             }
-            for (int i = 0; i < Console.WindowHeight; i++)
+            for (int i = 0; i < canvas.GetLength(0); i++)
             {
                 if (i == 0)
                 {
-                    canvas[i, Console.WindowWidth - 1] = ('┐', 0);
+                    canvas[i, canvas.GetLength(1) - 1] = ('┐', 15);
                 }
-                else if (i == Console.WindowHeight - 1)
+                else if (i == canvas.GetLength(0) - 1)
                 {
-                    canvas[i, Console.WindowWidth - 1] = ('┘', 0);
+                    canvas[i, canvas.GetLength(1) - 1] = ('┘', 15);
                 }
                 else
                 {
-                    canvas[i, Console.WindowWidth - 1] = ('|', 0);
+                    canvas[i, canvas.GetLength(1) - 1] = ('│', 15);
                 }
             }
-            for (int i = 1; i < Console.WindowHeight; i++)
+            for (int i = 1; i < canvas.GetLength(0); i++)
             {
-                if (i == Console.WindowHeight - 1)
+                if (i == canvas.GetLength(0) - 1)
                 {
-                    canvas[i, 0] = ('└', 0);
+                    canvas[i, 0] = ('└', 15);
                 }
                 else
                 {
-                    canvas[i, 0] = ('|', 0);
+                    canvas[i, 0] = ('│', 15);
                 }
 
             }
             return canvas;
         }
 
-        static void Save(char[,] chars)
+        static void Save((char, int)[,] chars)
         {
-            Stream stream = new FileStream("rajz.txt", FileMode.Truncate);
-            StreamWriter writer = new StreamWriter(stream);
-            writer.AutoFlush = true;
+            Stream streamD = new FileStream("draw.txt", FileMode.Truncate);
+            Stream streamC = new FileStream("color.txt", FileMode.Truncate);
+
+            StreamWriter writerD = new StreamWriter(streamD);
+            StreamWriter writerC = new StreamWriter(streamC);
+
+            writerD.AutoFlush = true;
+            writerC.AutoFlush = true;
+
             for (int i = 0; i < chars.GetLength(0); i++)
             {
                 for (int j = 0; j < chars.GetLength(1); j++)
                 {
-                    writer.Write(chars[i, j]);
+                    writerD.Write(chars[i, j].Item1);
                 }
-                writer.WriteLine();
+                if (i != chars.GetLength(0) - 1)
+                    writerD.WriteLine();
             }
-            writer.Close();
+            writerD.Close();
+
+            for (int i = 0; i < chars.GetLength(0); i++)
+            {
+                for (int j = 0; j < chars.GetLength(1); j++)
+                {
+                    writerC.Write(chars[i, j].Item2);
+                    writerC.Write(" ");
+                }
+                if (i != chars.GetLength(0) - 1)
+                    writerC.WriteLine();
+            }
+            writerC.Close();
+        }
+
+        static (char, int)[,] Load(string pathD, string pathC)
+        {
+            Console.Clear();
+            Status();
+
+            Stream streamD = new FileStream(pathD, FileMode.Open);
+            Stream streamC = new FileStream(pathC, FileMode.Open);
+
+            StreamReader readerD = new StreamReader(streamD);
+            StreamReader readerC = new StreamReader(streamC);
+
+            (char, int)[,] canvas = new (char, int)[Console.WindowHeight - 1, Console.WindowWidth];
+            char[,] draw = new char[Console.WindowHeight-1, Console.WindowWidth];
+            int[,] color = new int[Console.WindowHeight-1, Console.WindowWidth];
+
+            for (int i = 0; i < draw.GetLength(0); i++)
+            {
+                string line = readerD.ReadLine()!;
+                for (int j = 0; j < draw.GetLength(1); j++)
+                {
+                    draw[i, j] = line[j];
+                }
+            }
+            readerD.Close();
+
+            for (int i = 0; i < color.GetLength(0); i++)
+            {
+                string[] line = readerC.ReadLine()!.Split();
+                for (int j = 0; j < color.GetLength(1); j++)
+                {
+                    color[i, j] = int.Parse(line[j]);
+                }
+            }
+            readerC.Close();
+
+            for (int i = 0; i < canvas.GetLength(0); i++)
+            {
+                for (int j = 0; j < canvas.GetLength(1); j++)
+                {
+                    canvas[i, j] = (draw[i, j], color[i, j]);
+                }
+            }
+
+            for (int i = 0; i < draw.GetLength(0); i++)
+            {
+                for (int j = 0; j < draw.GetLength(1); j++)
+                {
+                    Console.ForegroundColor = (ConsoleColor)canvas[i, j].Item2;
+                    Console.Write(canvas[i, j].Item1);
+                }
+                if (i != draw.GetLength(0) - 1)
+                { 
+                    Console.WriteLine(); 
+                }
+            }
+
+            return canvas;
+        }
+        static void Status()
+        {
+            Console.SetCursorPosition(0, 0);
+            Console.Write('█');
+            Console.SetCursorPosition(3, 0);
+            Console.Write('D');
+            Console.WriteLine();
+        }
+        static void UI((char, int)[,] canvas)
+        {
+            Status();;
+            for (int i = 0; i < canvas.GetLength(0); i++)
+            {
+                for (int j = 0; j < canvas.GetLength(1); j++)
+                {
+                    Console.Write(canvas[i, j].Item1);
+                }
+                if (i != canvas.GetLength(0) - 1)
+                {
+                    Console.WriteLine();
+                }
+            }
         }
 
         //static char[] Load
         static void Rajzolas()
         {
-            //Stream stream = new FileStream("rajz.txt", FileMode.Truncate);
-            //File.Open("rajz.txt", FileMode.Truncate);
-            //StreamWriter writer = new StreamWriter(stream);
-            //writer.AutoFlush = true;
-            //Console.SetOut(writer);
+            /*Stream stream = new FileStream("rajz.txt", FileMode.Truncate);
+            File.Open("rajz.txt", FileMode.Truncate);
+            StreamWriter writer = new StreamWriter(stream);
+            writer.AutoFlush = true;
+            Console.SetOut(writer);*/
+
             char[] ch = { '░', '▒', '▓', '█', ' ' };
             (int, int) pos = (0, 0);
             int intensity = 3;
-            int color = 0;
-            Console.SetCursorPosition(0, 0);
-            Console.Write(ch[intensity]);
-            Console.SetCursorPosition(3, 0);
-            Console.Write('D');
-            Console.WriteLine();
+            int color = 15;
+            (char, int)[,] canvas = Canvas3();
+            UI(canvas);
 
             //char[,] canvas = Canvas2();
-            (char, int)[,] canvas = Canvas3();
-
+            
             /*for (int i = 0; i < canvas.Length; i++)
             {
                 Console.Write(canvas[i]);
-            }*/
+            }
 
-            /*for (int i = 0; i < canvas.GetLength(0); i++)
+            for (int i = 0; i < canvas.GetLength(0); i++)
             {
                 for (int j = 0; j < canvas.GetLength(1); j++)
                 {
@@ -1621,8 +1719,6 @@ namespace Hexaprog
                 }
                 Console.WriteLine();
             }*/
-
-            Frame2();
 
             Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
             pos = Console.GetCursorPosition();
@@ -1635,7 +1731,7 @@ namespace Hexaprog
                     case ConsoleKey.UpArrow:
                         if (pos.Item2 > 2 && Console.CapsLock)
                         {
-                            canvas[pos.Item2, pos.Item1] = (ch[intensity],color);
+                            canvas[pos.Item2, pos.Item1] = (ch[intensity], color);
                             Console.Write(ch[intensity]);
                             Console.CursorTop--;
                             Console.CursorLeft--;
@@ -1647,14 +1743,14 @@ namespace Hexaprog
                         pos = Console.GetCursorPosition();
                         break;
                     case ConsoleKey.DownArrow:
-                        if (pos.Item2 < Console.WindowHeight && Console.CapsLock)
+                        if (pos.Item2 < Console.WindowHeight-2 && Console.CapsLock)
                         {
-                            canvas[pos.Item2, pos.Item1] = ch[intensity];
+                            canvas[pos.Item2, pos.Item1] = (ch[intensity], color);
                             Console.Write(ch[intensity]);
                             Console.CursorTop++;
                             Console.CursorLeft--;
                         }
-                        else if (pos.Item2 < Console.WindowHeight)
+                        else if (pos.Item2 < Console.WindowHeight-2)
                         {
                             Console.CursorTop++;
                         }
@@ -1663,7 +1759,7 @@ namespace Hexaprog
                     case ConsoleKey.LeftArrow:
                         if (pos.Item1 > 1 && Console.CapsLock)
                         {
-                            canvas[pos.Item2, pos.Item1] = ch[intensity];
+                            canvas[pos.Item2, pos.Item1] = (ch[intensity], color);
                             Console.Write(ch[intensity]);
                             Console.CursorLeft--;
                             Console.CursorLeft--;
@@ -1675,12 +1771,12 @@ namespace Hexaprog
                         pos = Console.GetCursorPosition();
                         break;
                     case ConsoleKey.RightArrow:
-                        if (pos.Item1 < Console.WindowWidth && Console.CapsLock)
+                        if (pos.Item1 < Console.WindowWidth-2 && Console.CapsLock)
                         {
-                            canvas[pos.Item2, pos.Item1] = ch[intensity];
+                            canvas[pos.Item2, pos.Item1] = (ch[intensity], color);
                             Console.Write(ch[intensity]);
                         }
-                        else if (pos.Item1 < Console.WindowWidth)
+                        else if (pos.Item1 < Console.WindowWidth-2)
                         {
                             Console.CursorLeft++;
                         }
@@ -1689,7 +1785,7 @@ namespace Hexaprog
                     case ConsoleKey.NumPad1:
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.SetCursorPosition(0, 0);
-                        color = 0;
+                        color = 15;
                         Console.Write(ch[intensity]);
                         Console.SetCursorPosition(pos.Item1, pos.Item2);
                         Console.CursorLeft--;
@@ -1699,7 +1795,7 @@ namespace Hexaprog
                     case ConsoleKey.NumPad2:
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.SetCursorPosition(0, 0);
-                        color = 1;
+                        color = 12;
                         Console.Write(ch[intensity]);
                         Console.SetCursorPosition(pos.Item1, pos.Item2);
                         Console.CursorLeft--;
@@ -1710,7 +1806,7 @@ namespace Hexaprog
                     case ConsoleKey.NumPad3:
                         Console.ForegroundColor = ConsoleColor.Blue;
                         Console.SetCursorPosition(0, 0);
-                        color = 2;
+                        color = 9;
                         Console.Write(ch[intensity]);
                         Console.SetCursorPosition(pos.Item1, pos.Item2);
                         Console.CursorLeft--;
@@ -1720,7 +1816,7 @@ namespace Hexaprog
                         break;
                     case ConsoleKey.NumPad4:
                         Console.ForegroundColor = ConsoleColor.Green;
-                        color = 3;
+                        color = 10;
                         Console.SetCursorPosition(0, 0);
                         Console.WriteLine();
                         Console.Write(ch[intensity]);
@@ -1751,12 +1847,8 @@ namespace Hexaprog
                         break;
                     case ConsoleKey.R:
                         Console.Clear();
-                        Console.SetCursorPosition(0, 0);
-                        Console.Write(ch[intensity]);
-                        Console.SetCursorPosition(3, 0);
-                        Console.Write('D');
-                        Console.WriteLine();
-                        Frame2();
+                        canvas = Canvas3();
+                        UI(canvas);
                         Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
                         pos = Console.GetCursorPosition();
                         Console.ForegroundColor = ConsoleColor.White;
@@ -1786,8 +1878,7 @@ namespace Hexaprog
                         Console.CursorLeft--;
                         break;
                     case ConsoleKey.Spacebar:
-                        Console.CursorLeft--;
-                        canvas[pos.Item2, pos.Item1] = ch[intensity];
+                        canvas[pos.Item2, pos.Item1] = (ch[intensity], color);
                         Console.Write(ch[intensity]);
                         pos = Console.GetCursorPosition();
                         break;
@@ -1795,11 +1886,15 @@ namespace Hexaprog
                         Save(canvas);
                         break;
                     case ConsoleKey.L:
+                        Status();
+                        canvas = Load("draw.txt","color.txt");
+                        UI(canvas);
+                        Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
                         break;
                 }
-                //Console.Clear();
-                //File.Open("rajz.txt", FileMode.Truncate).Close();
-                /*for (int i = 0; i < canvas.GetLength(0); i++)
+                /*Console.Clear();
+                File.Open("rajz.txt", FileMode.Truncate).Close();
+                for (int i = 0; i < canvas.GetLength(0); i++)
                 {
                     for (int j = 0; j < canvas.GetLength(1); j++)
                     {
