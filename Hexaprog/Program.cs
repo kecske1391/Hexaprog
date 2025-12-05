@@ -1773,11 +1773,12 @@ namespace Hexaprog
             (int, int) pos = (0, 0);
             int intensity = 3;
             int color = 15;
+            Console.ForegroundColor = (ConsoleColor)color;
             bool help = false;
             ((int, int), bool) square = ((0, 0), false);
             List<Point> points = new List<Point>();
             Status status = new Status();
-            status.color = ConsoleColor.White;
+            status.color = (ConsoleColor)color;
             status.intensity = ch[intensity];
             status.mode = 'D';
             status.save = 'U';
@@ -1787,6 +1788,7 @@ namespace Hexaprog
 
             Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
             pos = Console.GetCursorPosition();
+            
 
             while (Console.ReadKey(true).Key != ConsoleKey.Escape)
             {
