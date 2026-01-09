@@ -1767,6 +1767,12 @@ namespace Hexaprog
             }
         }
 
+        static void PointDraw(int x, int y, char ch)
+        {
+            Console.SetCursorPosition(x,y);
+            Console.Write(ch);
+        }
+
         static void Rajzolas()
         {
             char[] ch = ['░', '▒', '▓', '█', ' '];
@@ -1776,6 +1782,7 @@ namespace Hexaprog
             Console.ForegroundColor = (ConsoleColor)color;
             bool help = false;
             ((int, int), bool) square = ((0, 0), false);
+            ((int, int), bool) circle = ((0, 0), false);
             List<Point> points = new List<Point>();
             Status status = new Status();
             status.color = (ConsoleColor)color;
@@ -2048,6 +2055,100 @@ namespace Hexaprog
                             }
                             Console.SetCursorPosition(pos.Item1, pos.Item2);
                             square.Item2 = false;
+                        }
+                        break;
+                    case ConsoleKey.O:
+                        int r = 0;
+                        int rpow = 0;
+                        bool move = false;
+                        if (!circle.Item2)
+                        {
+                            circle.Item1 = pos;
+                            circle.Item2 = true;
+                        }
+                        else
+                        {
+                            r = circle.Item1.Item1 - pos.Item1;
+                            rpow = r * r;
+                            Console.SetCursorPosition(pos.Item1+1, pos.Item2);
+                            Console.Write(ch[intensity]);
+                            pos = (pos.Item1 + r, pos.Item2);
+                            Console.SetCursorPosition(pos.Item1 + r , pos.Item2);
+                            //Console.Write(ch[intensity]);
+                            pos.Item1++;
+                            for (int j = 1; j <= r/2+1; j++)
+                            {
+                                for (int i = 0; i < r; i++)
+                                {
+                                    if (Math.Pow((double)(circle.Item1.Item1 - pos.Item1), 2) + Math.Pow((double)(circle.Item1.Item2 - pos.Item2), 2) <= rpow - j * r)
+                                    {
+                                        //count++;
+                                        PointDraw(pos.Item1, pos.Item2, ch[intensity]);
+                                        //PointDraw(pos.Item1-r, pos.Item2, ch[intensity]);
+                                        if (!move)
+                                        {
+                                            pos.Item1++;
+                                            move = true;
+                                        }
+                                    }
+                                    if (Math.Pow((double)(circle.Item1.Item1 - pos.Item1 + r), 2) + Math.Pow((double)(circle.Item1.Item2 - pos.Item2), 2) <= rpow - j * r)
+                                    {
+                                        //count++;
+                                        //PointDraw(pos.Item1, pos.Item2, ch[intensity]);
+                                        PointDraw(pos.Item1-r, pos.Item2, ch[intensity]);
+                                        if (!move)
+                                        {
+                                            pos.Item1++;
+                                            move = true;
+                                        }
+                             
+                                    }
+                                    move = false;
+                                }
+                                pos = circle.Item1;
+                                pos.Item2 -= 1 * j;
+                            }
+
+                            pos = (pos.Item1 + r, pos.Item2);
+
+                            for (int j = 1; j <= r / 2 + 2; j++)
+                            {
+                                for (int i = 0; i < r; i++)
+                                {
+                                    if (Math.Pow((double)(circle.Item1.Item1 - pos.Item1), 2) + Math.Pow((double)(circle.Item1.Item2 - pos.Item2), 2) <= rpow - j * r && circle.Item1.Item2 - pos.Item2 < r)
+                                    {
+                                        //count++;
+                                        PointDraw(pos.Item1, pos.Item2, ch[intensity]);
+                                        //PointDraw(pos.Item1-r, pos.Item2, ch[intensity]);
+                                        if (!move)
+                                        {
+                                            pos.Item1++;
+                                            move = true;
+                                        }
+                                    }
+                                    if (Math.Pow((double)(circle.Item1.Item1 - pos.Item1 + r), 2) + Math.Pow((double)(circle.Item1.Item2 - pos.Item2), 2) <= rpow - j * r && circle.Item1.Item2 - pos.Item2 < r)
+                                    {
+                                        //count++;
+                                        //PointDraw(pos.Item1, pos.Item2, ch[intensity]);
+                                        PointDraw(pos.Item1 - r, pos.Item2, ch[intensity]);
+                                        if (!move)
+                                        {
+                                            pos.Item1++;
+                                            move = true;
+                                        }
+
+                                    }
+                                    move = false;
+                                }
+                                pos = circle.Item1;
+                                pos.Item2 += 1 * j;
+                            }
+                            /*Console.SetCursorPosition(pos.Item1 - r, pos.Item2);
+                            Console.Write(ch[intensity]);
+                            Console.SetCursorPosition(pos.Item1, pos.Item2 + r/2);
+                            Console.Write(ch[intensity]);
+                            Console.SetCursorPosition(pos.Item1, pos.Item2 - r/2);
+                            Console.Write(ch[intensity]);*/
                         }
                         break;
                 }
