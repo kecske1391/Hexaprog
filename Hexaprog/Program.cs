@@ -378,7 +378,7 @@ namespace Hexaprog
             writerC.Close();
         }
 
-        static void SavePoints(List<Point> points)
+        static void SaveFile(List<Point> points)
         {
             Stream streamD = new FileStream("draw.txt", FileMode.Truncate);
 
@@ -393,7 +393,6 @@ namespace Hexaprog
             writerD.Close();
 
         }
-
         static (char, int)[,] Load(string pathD, string pathC)
         {
             Console.Clear();
@@ -453,7 +452,7 @@ namespace Hexaprog
             return canvas;
         }
 
-        static List<Point> LoadPoints(string pathD)
+        static List<Point> LoadFile(string pathD)
         {
             Console.Clear();
             Frame3();
@@ -469,6 +468,19 @@ namespace Hexaprog
             }
 
             return points;
+        }
+
+        static void LoadPoints(List<Point> points)
+        {
+            Console.Clear();
+            Frame3();
+
+            Console.SetCursorPosition(0, 1);
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                Point.DrawPoint(points[i]);
+            }
         }
         public struct Status
         {
@@ -487,24 +499,41 @@ namespace Hexaprog
                 Console.Write($" {mode} {save} {text}");
             }
         }
-
+        static void PointDraw(int x, int y, string ch)
+        {
+            Console.SetCursorPosition(x, y);
+            Console.Write(ch);
+            
+        }
         static void PointDraw(int x, int y, char ch)
         {
             Console.SetCursorPosition(x, y);
             Console.Write(ch);
-        }
 
+        }
         static void Rajzolas()
         {
+            string pixel = "██";
             char[] ch = ['░', '▒', '▓', '█', ' '];
             (int, int) pos = (0, 0);
             int intensity = 3;
             int color = 15;
+            int pagenum = 0;
             Console.ForegroundColor = (ConsoleColor)color;
             bool help = false;
             ((int, int), bool) square = ((0, 0), false);
             ((int, int), bool) circle = ((0, 0), false);
+            ((int, int), bool) hazard = ((0, 0), false);
             List<Point> points = new List<Point>();
+            points.Add(new Point()
+            {
+                x = 0,
+                y = 0,
+                color = (ConsoleColor)color,
+                symbol = ch[intensity]
+            });
+            List<List<Point>> pages = new List<List<Point>>();
+            pages.Add( points);
             Status status = new Status();
             status.color = (ConsoleColor)color;
             status.intensity = ch[intensity];
@@ -707,20 +736,20 @@ namespace Hexaprog
                         pos = Console.GetCursorPosition();
                         break;
                     case ConsoleKey.S:
-                        SavePoints(points);
+                        SaveFile(points);
                         Console.SetCursorPosition(4, 0);
                         Console.Write('S');
                         Console.SetCursorPosition(pos.Item1, pos.Item2);
                         break;
                     case ConsoleKey.L:
-                        points = LoadPoints("draw.txt");
+                        points = LoadFile("draw.txt");
                         status.DrawStatus();
                         Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
                         break;
                     case ConsoleKey.F1:
                         if (!help)
                         {
-                            SavePoints(points);
+                            SaveFile(points);
                             Console.Clear();
                             Frame3();
                             Console.SetCursorPosition(0, 0);
@@ -739,12 +768,16 @@ namespace Hexaprog
                             Console.Write("Press R to reset your canvas.");
                             Console.SetCursorPosition(1, 8);
                             Console.Write("Use the add and subtract buttons to change your brush intesity.");
+                            Console.SetCursorPosition(1, 9);
+                            Console.Write("Use the A button to determain a circle center point, then press it again in a different place to add the radius.");
+                            Console.SetCursorPosition(1, 10);
+                            Console.Write("Use the C button the same way as the A button to generate a cognito hazard.");
                             help = true;
                         }
                         else
                         {
                             Console.Clear();
-                            LoadPoints("draw.txt");
+                            LoadFile("draw.txt");
                             status.DrawStatus();
                             Console.SetCursorPosition(pos.Item1, pos.Item2);
                             help = false;
@@ -779,7 +812,7 @@ namespace Hexaprog
                         }
                         break;
                     case ConsoleKey.A:
-                        int r;
+                        /*int r;
                         int rpow;
                         if (!circle.Item2)
                         {
@@ -788,6 +821,7 @@ namespace Hexaprog
                         }
                         else
                         {
+                            circle.Item2 = false;
                             r = circle.Item1.Item1 - pos.Item1;
                             rpow = r * r;
                             Console.Write(ch[intensity]);
@@ -875,23 +909,24 @@ namespace Hexaprog
 
                             }
                         }
-                        break;
+                        break;*/
                     case ConsoleKey.C:
                         int rc;
                         int rcpow;
-                        if (!circle.Item2)
+                        if (!hazard.Item2)
                         {
-                            circle.Item1 = pos;
-                            circle.Item2 = true;
+                            hazard.Item1 = pos;
+                            hazard.Item2 = true;
                         }
                         else
                         {
-                            rc = circle.Item1.Item1 - pos.Item1;
+                            hazard.Item2 = false;
+                            rc = hazard.Item1.Item1 - pos.Item1;
                             rcpow = rc * rc;
                             Console.Write(ch[intensity]);
                             Console.SetCursorPosition(pos.Item1 + 1, pos.Item2);
                             Console.Write(ch[intensity]);
-                            pos = circle.Item1;
+                            pos = hazard.Item1;
                             Console.SetCursorPosition(pos.Item1 - (int)(rc * 1.6), pos.Item2);
                             Console.Write(ch[intensity]);
                             points.Add(new Point()
@@ -914,7 +949,7 @@ namespace Hexaprog
                             {
                                 for (int i = 0; i < rc * 2 - (rc / 2.8); i++)
                                 {
-                                    if (Math.Pow((double)(circle.Item1.Item1 - pos.Item1), 2) + Math.Pow((double)(circle.Item1.Item2 - pos.Item2), 2) <= (rcpow - j * rc) * Math.Cos(i*j) * Math.Tanh(i*j))
+                                    if (Math.Pow((double)(hazard.Item1.Item1 - pos.Item1), 2) + Math.Pow((double)(hazard.Item1.Item2 - pos.Item2), 2) <= (rcpow - j * rc) * Math.Cos(i*j) * Math.Tanh(i*j))
                                     {
                                         PointDraw(pos.Item1, pos.Item2, ch[intensity]);
 
@@ -938,7 +973,7 @@ namespace Hexaprog
                                         pos.Item1++;
                                     }
                                 }
-                                pos = circle.Item1;
+                                pos = hazard.Item1;
                                 pos.Item2 -= 1 * j;
                             }
                             pos = (pos.Item1 + rc, pos.Item2);
@@ -947,7 +982,7 @@ namespace Hexaprog
                             {
                                 for (int i = 0; i < rc * 2 - (rc / 2.8); i++)
                                 {
-                                    if (Math.Pow((double)(circle.Item1.Item1 - pos.Item1), 2) + Math.Pow((double)(circle.Item1.Item2 - pos.Item2), 2) <= (rcpow - j * rc) * Math.Cos(i*j) * Math.Tanh(i*j)&& circle.Item1.Item2 + pos.Item2 > circle.Item1.Item2 + rc)
+                                    if (Math.Pow((double)(hazard.Item1.Item1 - pos.Item1), 2) + Math.Pow((double)(hazard.Item1.Item2 - pos.Item2), 2) <= (rcpow - j * rc) * Math.Cos(i*j) * Math.Tanh(i*j)&& hazard.Item1.Item2 + pos.Item2 > hazard.Item1.Item2 + rc)
                                     {
 
                                         PointDraw(pos.Item1, pos.Item2, ch[intensity]);
@@ -966,6 +1001,114 @@ namespace Hexaprog
                                             color = (ConsoleColor)color,
                                             symbol = ch[intensity]
                                         });
+                                        pos.Item1++;
+                                    }
+                                }
+                                pos = hazard.Item1;
+
+                                pos.Item2 += 1 * j;
+
+
+                            }
+                        }
+                        break;
+                    case ConsoleKey.O:
+                        int r;
+                        int rpow;
+                        if (!circle.Item2)
+                        {
+                            circle.Item1 = pos;
+                            circle.Item2 = true;
+                        }
+                        else
+                        {
+                            circle.Item2 = false;
+                            r = circle.Item1.Item1 - pos.Item1;
+                            rpow = r * r;
+                            /*Console.Write(ch[intensity]);
+                            Console.Write(ch[intensity]);*/
+                            Console.SetCursorPosition(pos.Item1 + 1, pos.Item2);
+                            Console.Write(ch[intensity]);
+                            Console.Write(ch[intensity]);
+                            Console.Write(ch[intensity]);
+                            pos = circle.Item1;
+                            Console.SetCursorPosition(pos.Item1 - (int)(r * 1.6), pos.Item2);
+                           /*Console.Write(ch[intensity]);
+                            Console.Write(ch[intensity]);*/
+                            points.Add(new Point()
+                            {
+                                x = pos.Item1 - (int)(r * 1.6),
+                                y = pos.Item2,
+                                color = (ConsoleColor)color,
+                                symbol = ch[intensity]
+                            });
+                            /*Console.Write(ch[intensity]);
+                            Console.Write(ch[intensity]);*/
+                            points.Add(new Point()
+                            {
+                                x = pos.Item1 - (int)(r * 1.6) + 1,
+                                y = pos.Item2,
+                                color = (ConsoleColor)color,
+                                symbol = ch[intensity]
+                            });
+                            pos.Item1++;
+                            for (int j = 0; j < r ; j++)
+                            {
+                                for (int i = 0; i < r ; i++)
+                                {
+                                    if (Math.Pow((double)(circle.Item1.Item1 - pos.Item1), 2)-r + Math.Pow((double)(circle.Item1.Item2 - pos.Item2), 2)-r <= (rpow - j * r ) )
+                                    {
+                                        PointDraw(pos.Item1, pos.Item2, pixel);
+                                        points.Add(new Point()
+                                        {
+                                            x = pos.Item1,
+                                            y = pos.Item2,
+                                            color = (ConsoleColor)color,
+                                            symbol = ch[intensity]
+                                        });
+                                        PointDraw(pos.Item1 - i * 2 *2, pos.Item2, pixel);
+                                        points.Add(new Point()
+                                        {
+                                            x = pos.Item1 - i * 2,
+                                            y = pos.Item2,
+                                            color = (ConsoleColor)color,
+                                            symbol = ch[intensity]
+                                        });
+                                        pos.Item1++;
+                                        pos.Item1++;
+
+                                    }
+                                }
+                                pos = circle.Item1;
+                                pos.Item2 -= 1 * j;
+                            }
+                            pos = (pos.Item1 + r, pos.Item2);
+
+                            for (int j = 0; j < r ; j++)
+                            {
+                                for (int i = 0; i < r ; i++)
+                                {
+                                    if (Math.Pow((double)(circle.Item1.Item1 - pos.Item1), 2)-r + Math.Pow((double)(circle.Item1.Item2 - pos.Item2), 2)-r <= (rpow - j * r ) 
+                                        /* && (circle.Item1.Item2 + pos.Item2 > circle.Item1.Item2 + r)*/)
+                                    {
+
+                                        PointDraw(pos.Item1, pos.Item2, pixel);
+                                        points.Add(new Point()
+                                        {
+                                            x = pos.Item1,
+                                            y = pos.Item2,
+                                            color = (ConsoleColor)color,
+                                            symbol = ch[intensity]
+                                        });
+                                        PointDraw(pos.Item1 - i * 2 * 2, pos.Item2, pixel);
+                                        points.Add(new Point()
+                                        {
+                                            x = pos.Item1 - i * 2,
+                                            y = pos.Item2,
+                                            color = (ConsoleColor)color,
+                                            symbol = ch[intensity]
+                                        });
+                                        pos.Item1++;
                                         pos.Item1++;
                                     }
                                 }
@@ -975,6 +1118,63 @@ namespace Hexaprog
 
 
                             }
+                        }
+                        break;
+                    case ConsoleKey.F3:
+                        pages[pagenum] = new List<Point>();
+                        for (int i = 0; i < points.Count; i++)
+                        {
+                           pages[pagenum].Add(points[i]);
+                        }
+                        pagenum++;
+                        points = new List<Point>();
+                        try
+                        {
+                            for (int i = 0; i < pages[pagenum].Count; i++)
+                            {
+                                points.Add(pages[pagenum][i]);
+                            }
+                        }
+                        catch(ArgumentOutOfRangeException)
+                        {
+                            pages.Add(new List<Point>());
+                            for (int i = 0; i < pages[pagenum].Count; i++)
+                            {
+                                points.Add(pages[pagenum][i]);
+                            }
+                        }
+                        LoadPoints(points);
+                        status.DrawStatus();
+                        Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
+                        break;
+                    case ConsoleKey.F2:
+                        if (pagenum != 0)
+                        {
+                            pages[pagenum] = new List<Point>();
+                            for (int i = 0; i < points.Count; i++)
+                            {
+                                pages[pagenum].Add(points[i]);
+                            }
+                            pagenum--;
+                            points = new List<Point>();
+                            try
+                            {
+                                for (int i = 0; i < pages[pagenum].Count; i++)
+                                {
+                                    points.Add(pages[pagenum][i]);
+                                }
+                            }
+                            catch (ArgumentOutOfRangeException)
+                            {
+                                pages.Add(new List<Point>());
+                                for (int i = 0; i < pages[pagenum].Count; i++)
+                                {
+                                    points.Add(pages[pagenum][i]);
+                                }
+                            }
+                            LoadPoints(points);
+                            status.DrawStatus();
+                            Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
                         }
                         break;
                 }
