@@ -5,4 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:Hexaprog.Program.Rajzolas")]
+[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "STFU", Scope = "member", Target = "~M:Hexaprog.Program.Rajzolas")]

@@ -9,140 +9,42 @@ namespace Hexaprog
 {
     class Point
     {
-        public int x { get; set; }
-        public int y { get; set; }
-        public ConsoleColor color { get; set; }
-        public char symbol { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public ConsoleColor Color { get; set; }
+        public char Symbol { get; set; }
+        public int Page { get; set; }
 
         public string ToCSV()
         {
-            return $"{x},{y},{(int)color},{symbol}";
+            return $"{X},{Y},{(int)Color},{Symbol},{Page}";
         }
         public static Point FromCSV(string csv)
         {
             string[] strings = csv.Split(',');
             return new Point()
             {
-                x = int.Parse(strings[0]),
-                y = int.Parse(strings[1]),
-                color = (ConsoleColor)int.Parse(strings[2]),
-                symbol = strings[3][0]
+                X = int.Parse(strings[0]),
+                Y = int.Parse(strings[1]),
+                Color = (ConsoleColor)int.Parse(strings[2]),
+                Symbol = strings[3][0],
+                Page = int.Parse(strings[4])
             };
         }
 
         public static void DrawPoint(Point point)
         {
-            Console.SetCursorPosition(point.x, point.y);
-            Console.ForegroundColor = point.color;
-            Console.Write(point.symbol);
+            Console.SetCursorPosition(point.X, point.Y);
+            Console.ForegroundColor = point.Color;
+            Console.Write(point.Symbol);
         }
     }
     internal class Program
     {
-
         static void Main(string[] args)
         {
-
             Rajzolas();
-
         }
-
-        static void Frame()
-        {
-            for (int i = 0; i < Console.WindowWidth; i++)
-            {
-                Console.SetCursorPosition(i, 1);
-                Console.Write('─');
-            }
-            for (int i = 1; i < Console.WindowHeight; i++)
-            {
-                if (i == 1)
-                {
-                    Console.SetCursorPosition(0, i);
-                    Console.Write('┌');
-                }
-                else if (i == Console.WindowHeight - 1)
-                {
-                    Console.SetCursorPosition(0, i);
-                    Console.Write('└');
-                }
-                else
-                {
-                    Console.SetCursorPosition(0, i);
-                    Console.Write('│');
-                }
-            }
-            for (int i = 1; i < Console.WindowHeight; i++)
-            {
-                if (i == 1)
-                {
-                    Console.SetCursorPosition(Console.WindowWidth - 1, i);
-                    Console.Write('┐');
-                }
-                else if (i == Console.WindowHeight - 1)
-                {
-                    Console.SetCursorPosition(Console.WindowWidth - 1, i);
-                    Console.Write('┘');
-                }
-                else
-                {
-                    Console.SetCursorPosition(Console.WindowWidth - 1, i);
-                    Console.Write('│');
-                }
-            }
-            for (int i = 1; i < Console.WindowWidth - 1; i++)
-            {
-                Console.SetCursorPosition(i, Console.WindowHeight - 1);
-                Console.Write('─');
-            }
-        }
-
-        static void Frame2()
-        {
-            Console.WriteLine();
-            for (int i = 0; i < Console.WindowWidth; i++)
-            {
-                if (i == 0)
-                {
-                    Console.Write('┌');
-                }
-                else if (i == Console.WindowWidth - 1)
-                {
-                    Console.Write('┐');
-                }
-                else
-                {
-                    Console.Write('─');
-                }
-            }
-            Console.WriteLine();
-            for (int i = 0; i < Console.WindowHeight - 3; i++)
-            {
-                Console.Write('│');
-                for (int j = 0; j < Console.WindowWidth - 2; j++)
-                {
-                    Console.Write(' ');
-                }
-                Console.Write("│");
-            }
-
-            for (int i = 0; i < Console.WindowWidth; i++)
-            {
-                if (i == 0)
-                {
-                    Console.Write('└');
-                }
-                else if (i == Console.WindowWidth - 1)
-                {
-                    Console.Write('┘');
-                }
-                else
-                {
-                    Console.Write('─');
-                }
-            }
-        }
-
         static void Frame3()
         {
             Console.SetCursorPosition(0, 1);
@@ -162,222 +64,6 @@ namespace Hexaprog
             Console.Write("─".PadRight(Console.WindowWidth - 2, '─'));
             Console.Write('┘');
         }
-        static char[] Canvas()
-        {
-            List<char> canvas = new List<char>();
-            for (int i = 0; i < Console.WindowWidth; i++)
-            {
-                if (i == 0)
-                {
-                    canvas.Add('┌');
-                }
-                else if (i == Console.WindowWidth - 1)
-                {
-                    canvas.Add('┐');
-                }
-                else
-                {
-                    canvas.Add('─');
-                }
-            }
-            canvas.Add('\n');
-            for (int i = 0; i < Console.WindowHeight - 2; i++)
-            {
-                canvas.Add('│');
-                for (int j = 0; j < Console.WindowWidth - 2; j++)
-                {
-                    canvas.Add(' ');
-                }
-                canvas.Add('│');
-                canvas.Add('\n');
-            }
-
-            for (int i = 0; i < Console.WindowWidth; i++)
-            {
-                if (i == 0)
-                {
-                    canvas.Add('└');
-                }
-                else if (i == Console.WindowWidth - 1)
-                {
-                    canvas.Add('┘');
-                }
-                else
-                {
-                    canvas.Add('─');
-                }
-            }
-            canvas.Add('\n');
-            return canvas.ToArray();
-        }
-
-        static char[,] Canvas2()
-        {
-            char[,] canvas = new char[Console.WindowHeight, Console.WindowWidth];
-            for (int i = 0; i < Console.WindowHeight; i++)
-            {
-                if (i == 0)
-                {
-                    canvas[0, i] = '┌';
-                }
-                else if (i == Console.WindowHeight - 1)
-                {
-                    canvas[0, i] = '└';
-                }
-                else
-                {
-                    canvas[0, i] = '─';
-                }
-            }
-            for (int i = 1; i < Console.WindowWidth - 1; i++)
-            {
-                for (int j = 0; j < Console.WindowHeight; j++)
-                {
-                    if (j == 0)
-                    {
-                        canvas[j, i] = '─';
-                    }
-                    else if (j == Console.WindowHeight - 1)
-                    {
-                        canvas[j, i] = '─';
-                    }
-                    else
-                    {
-                        canvas[j, i] = ' ';
-                    }
-                }
-            }
-            for (int i = 0; i < Console.WindowHeight; i++)
-            {
-                if (i == 0)
-                {
-                    canvas[i, Console.WindowWidth - 1] = '┐';
-                }
-                else if (i == Console.WindowHeight - 1)
-                {
-                    canvas[i, Console.WindowWidth - 1] = '┘';
-                }
-                else
-                {
-                    canvas[i, Console.WindowWidth - 1] = '|';
-                }
-            }
-            for (int i = 1; i < Console.WindowHeight; i++)
-            {
-                if (i == Console.WindowHeight - 1)
-                {
-                    canvas[i, 0] = '└';
-                }
-                else
-                {
-                    canvas[i, 0] = '|';
-                }
-
-            }
-            return canvas;
-        }
-
-        static (char, int)[,] Canvas3()
-        {
-            (char, int)[,] canvas = new (char, int)[Console.WindowHeight - 1, Console.WindowWidth];
-            for (int i = 0; i < canvas.GetLength(0); i++)
-            {
-                if (i == 0)
-                {
-                    canvas[0, i] = ('┌', 15);
-                }
-                else if (i == canvas.GetLength(0) - 1)
-                {
-                    canvas[0, i] = ('└', 15);
-                }
-                else
-                {
-                    canvas[0, i] = ('─', 15);
-                }
-            }
-            for (int i = 1; i < canvas.GetLength(1) - 1; i++)
-            {
-                for (int j = 0; j < canvas.GetLength(0); j++)
-                {
-                    if (j == 0)
-                    {
-                        canvas[j, i] = ('─', 15);
-                    }
-                    else if (j == canvas.GetLength(0) - 1)
-                    {
-                        canvas[j, i] = ('─', 15);
-                    }
-                    else
-                    {
-                        canvas[j, i] = (' ', 15);
-                    }
-                }
-            }
-            for (int i = 0; i < canvas.GetLength(0); i++)
-            {
-                if (i == 0)
-                {
-                    canvas[i, canvas.GetLength(1) - 1] = ('┐', 15);
-                }
-                else if (i == canvas.GetLength(0) - 1)
-                {
-                    canvas[i, canvas.GetLength(1) - 1] = ('┘', 15);
-                }
-                else
-                {
-                    canvas[i, canvas.GetLength(1) - 1] = ('│', 15);
-                }
-            }
-            for (int i = 1; i < canvas.GetLength(0); i++)
-            {
-                if (i == canvas.GetLength(0) - 1)
-                {
-                    canvas[i, 0] = ('└', 15);
-                }
-                else
-                {
-                    canvas[i, 0] = ('│', 15);
-                }
-
-            }
-            return canvas;
-        }
-
-        static void Save((char, int)[,] chars)
-        {
-            Stream streamD = new FileStream("draw.txt", FileMode.Truncate);
-            Stream streamC = new FileStream("color.txt", FileMode.Truncate);
-
-            StreamWriter writerD = new StreamWriter(streamD);
-            StreamWriter writerC = new StreamWriter(streamC);
-
-            writerD.AutoFlush = true;
-            writerC.AutoFlush = true;
-
-            for (int i = 0; i < chars.GetLength(0); i++)
-            {
-                for (int j = 0; j < chars.GetLength(1); j++)
-                {
-                    writerD.Write(chars[i, j].Item1);
-                }
-                if (i != chars.GetLength(0) - 1)
-                    writerD.WriteLine();
-            }
-            writerD.Close();
-
-            for (int i = 0; i < chars.GetLength(0); i++)
-            {
-                for (int j = 0; j < chars.GetLength(1); j++)
-                {
-                    writerC.Write(chars[i, j].Item2);
-                    writerC.Write(" ");
-                }
-                if (i != chars.GetLength(0) - 1)
-                    writerC.WriteLine();
-            }
-            writerC.Close();
-        }
-
         static void SaveFile(List<Point> points)
         {
             Stream streamD = new FileStream("draw.txt", FileMode.Truncate);
@@ -393,66 +79,7 @@ namespace Hexaprog
             writerD.Close();
 
         }
-        static (char, int)[,] Load(string pathD, string pathC)
-        {
-            Console.Clear();
-            Console.SetCursorPosition(0, 1);
-
-            Stream streamD = new FileStream(pathD, FileMode.Open);
-            Stream streamC = new FileStream(pathC, FileMode.Open);
-
-            StreamReader readerD = new StreamReader(streamD);
-            StreamReader readerC = new StreamReader(streamC);
-
-            (char, int)[,] canvas = new (char, int)[Console.WindowHeight - 1, Console.WindowWidth];
-            char[,] draw = new char[Console.WindowHeight - 1, Console.WindowWidth];
-            int[,] color = new int[Console.WindowHeight - 1, Console.WindowWidth];
-
-            for (int i = 0; i < draw.GetLength(0); i++)
-            {
-                string line = readerD.ReadLine()!;
-                for (int j = 0; j < draw.GetLength(1); j++)
-                {
-                    draw[i, j] = line[j];
-                }
-            }
-            readerD.Close();
-
-            for (int i = 0; i < color.GetLength(0); i++)
-            {
-                string[] line = readerC.ReadLine()!.Split();
-                for (int j = 0; j < color.GetLength(1); j++)
-                {
-                    color[i, j] = int.Parse(line[j]);
-                }
-            }
-            readerC.Close();
-
-            for (int i = 0; i < canvas.GetLength(0); i++)
-            {
-                for (int j = 0; j < canvas.GetLength(1); j++)
-                {
-                    canvas[i, j] = (draw[i, j], color[i, j]);
-                }
-            }
-
-            for (int i = 0; i < draw.GetLength(0); i++)
-            {
-                for (int j = 0; j < draw.GetLength(1); j++)
-                {
-                    Console.ForegroundColor = (ConsoleColor)canvas[i, j].Item2;
-                    Console.Write(canvas[i, j].Item1);
-                }
-                if (i != draw.GetLength(0) - 1)
-                {
-                    Console.WriteLine();
-                }
-            }
-
-            return canvas;
-        }
-
-        static List<Point> LoadFile(string pathD)
+        static List<Point> LoadFile(string pathD, int pagenum)
         {
             Console.Clear();
             Frame3();
@@ -464,13 +91,15 @@ namespace Hexaprog
             for (int i = 0; i < lines.Length; i++)
             {
                 points.Add(Point.FromCSV(lines[i]));
-                Point.DrawPoint(points[i]);
+                if (points[i].Page == pagenum)
+                {
+                    Point.DrawPoint(points[i]);
+                }
             }
 
             return points;
         }
-
-        static void LoadPoints(List<Point> points)
+        static void LoadPoints(List<Point> points, int pagenum)
         {
             Console.Clear();
             Frame3();
@@ -479,7 +108,10 @@ namespace Hexaprog
 
             for (int i = 0; i < points.Count; i++)
             {
-                Point.DrawPoint(points[i]);
+                if (points[i].Page == pagenum)
+                {
+                    Point.DrawPoint(points[i]);
+                }
             }
         }
         public struct Status
@@ -489,30 +121,29 @@ namespace Hexaprog
             public char mode;
             public char save;
             public string text;
-
+            public int page;
             public void DrawStatus()
             {
                 Console.SetCursorPosition(0, 0);
                 Console.ForegroundColor = color;
                 Console.Write(intensity);
                 Console.ForegroundColor = (ConsoleColor)15;
-                Console.Write($" {mode} {save} {text}");
+                Console.Write($" {mode} {save} {page} {text}");
             }
         }
         static void PointDraw(int x, int y, string ch)
         {
             Console.SetCursorPosition(x, y);
             Console.Write(ch);
-            
         }
         static void PointDraw(int x, int y, char ch)
         {
             Console.SetCursorPosition(x, y);
             Console.Write(ch);
-
         }
         static void Rajzolas()
         {
+            #region Setup
             string pixel = "██";
             char[] ch = ['░', '▒', '▓', '█', ' '];
             (int, int) pos = (0, 0);
@@ -525,27 +156,19 @@ namespace Hexaprog
             ((int, int), bool) circle = ((0, 0), false);
             ((int, int), bool) hazard = ((0, 0), false);
             List<Point> points = new List<Point>();
-            points.Add(new Point()
-            {
-                x = 0,
-                y = 0,
-                color = (ConsoleColor)color,
-                symbol = ch[intensity]
-            });
-            List<List<Point>> pages = new List<List<Point>>();
-            pages.Add( points);
             Status status = new Status();
             status.color = (ConsoleColor)color;
             status.intensity = ch[intensity];
             status.mode = 'D';
             status.save = 'U';
+            status.page = pagenum + 1;
             status.text = "Press F1 for help (your progress will be saved)";
             status.DrawStatus();
             Frame3();
 
             Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
             pos = Console.GetCursorPosition();
-
+            #endregion
 
             while (Console.ReadKey(true).Key != ConsoleKey.Escape)
             {
@@ -555,14 +178,16 @@ namespace Hexaprog
                     case ConsoleKey.UpArrow:
                         if (pos.Item2 > 2 && Console.CapsLock)
                         {
+                            
+                            Console.Write(ch[intensity]);
                             points.Add(new Point()
                             {
-                                x = pos.Item1,
-                                y = pos.Item2,
-                                color = (ConsoleColor)color,
-                                symbol = ch[intensity]
+                                X = pos.Item1,
+                                Y = pos.Item2,
+                                Color = (ConsoleColor)color,
+                                Symbol = ch[intensity],
+                                Page = pagenum
                             });
-                            Console.Write(ch[intensity]);
                             Console.CursorTop--;
                             Console.CursorLeft--;
                         }
@@ -575,14 +200,16 @@ namespace Hexaprog
                     case ConsoleKey.DownArrow:
                         if (pos.Item2 < Console.WindowHeight - 2 && Console.CapsLock)
                         {
+                            
+                            Console.Write(ch[intensity]);
                             points.Add(new Point()
                             {
-                                x = pos.Item1,
-                                y = pos.Item2,
-                                color = (ConsoleColor)color,
-                                symbol = ch[intensity]
+                                X = pos.Item1,
+                                Y = pos.Item2,
+                                Color = (ConsoleColor)color,
+                                Symbol = ch[intensity],
+                                Page = pagenum
                             });
-                            Console.Write(ch[intensity]);
                             Console.CursorTop++;
                             Console.CursorLeft--;
                         }
@@ -595,14 +222,16 @@ namespace Hexaprog
                     case ConsoleKey.LeftArrow:
                         if (pos.Item1 > 1 && Console.CapsLock)
                         {
+                            
+                            Console.Write(ch[intensity]);
                             points.Add(new Point()
                             {
-                                x = pos.Item1,
-                                y = pos.Item2,
-                                color = (ConsoleColor)color,
-                                symbol = ch[intensity]
+                                X = pos.Item1,
+                                Y = pos.Item2,
+                                Color = (ConsoleColor)color,
+                                Symbol = ch[intensity],
+                                Page = pagenum
                             });
-                            Console.Write(ch[intensity]);
                             Console.CursorLeft--;
                             Console.CursorLeft--;
                         }
@@ -615,14 +244,16 @@ namespace Hexaprog
                     case ConsoleKey.RightArrow:
                         if (pos.Item1 < Console.WindowWidth - 2 && Console.CapsLock)
                         {
+                            
+                            Console.Write(ch[intensity]);
                             points.Add(new Point()
                             {
-                                x = pos.Item1,
-                                y = pos.Item2,
-                                color = (ConsoleColor)color,
-                                symbol = ch[intensity]
+                                X = pos.Item1,
+                                Y = pos.Item2,
+                                Color = (ConsoleColor)color,
+                                Symbol = ch[intensity],
+                                Page = pagenum
                             });
-                            Console.Write(ch[intensity]);
                         }
                         else if (pos.Item1 < Console.WindowWidth - 2)
                         {
@@ -671,7 +302,68 @@ namespace Hexaprog
                         Console.CursorLeft--;
                         Console.Write(' ');
                         Console.CursorLeft--;
+                        break;
+                    case ConsoleKey.NumPad5:
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.SetCursorPosition(0, 0);
+                        color = 11;
+                        Console.Write(ch[intensity]);
+                        Console.SetCursorPosition(pos.Item1, pos.Item2);
+                        Console.CursorLeft--;
+                        Console.Write(' ');
+                        Console.CursorLeft--;
+                        break;
+                    case ConsoleKey.NumPad6:
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.SetCursorPosition(0, 0);
+                        color = 7;
+                        Console.Write(ch[intensity]);
+                        Console.SetCursorPosition(pos.Item1, pos.Item2);
+                        Console.CursorLeft--;
+                        Console.Write(' ');
+                        Console.CursorLeft--;
+                        break;
+                    case ConsoleKey.NumPad7:
+                        Console.ForegroundColor = ConsoleColor.DarkBlue;
+                        Console.SetCursorPosition(0, 0);
+                        color = 1;
+                        Console.Write(ch[intensity]);
+                        Console.SetCursorPosition(pos.Item1, pos.Item2);
+                        Console.CursorLeft--;
+                        Console.Write(' ');
+                        Console.CursorLeft--;
+                        break;
+                    case ConsoleKey.NumPad8:
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.SetCursorPosition(0, 0);
+                        color = 14;
+                        Console.Write(ch[intensity]);
+                        Console.SetCursorPosition(pos.Item1, pos.Item2);
+                        Console.CursorLeft--;
+                        Console.Write(' ');
+                        Console.CursorLeft--;
 
+                        break;
+                    case ConsoleKey.NumPad9:
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        Console.SetCursorPosition(0, 0);
+                        color = 13;
+                        Console.Write(ch[intensity]);
+                        Console.SetCursorPosition(pos.Item1, pos.Item2);
+                        Console.CursorLeft--;
+                        Console.Write(' ');
+                        Console.CursorLeft--;
+
+                        break;
+                    case ConsoleKey.NumPad0:
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        color = 0;
+                        Console.SetCursorPosition(0, 0);
+                        Console.Write(ch[intensity]);
+                        Console.SetCursorPosition(pos.Item1, pos.Item2);
+                        Console.CursorLeft--;
+                        Console.Write(' ');
+                        Console.CursorLeft--;
                         break;
                     case ConsoleKey.E:
                         if (intensity < 4)
@@ -694,6 +386,13 @@ namespace Hexaprog
                         break;
                     case ConsoleKey.R:
                         Console.Clear();
+                        for (int i = 0; i < points.Count; i++)
+                        {
+                            if (points[i].Page == pagenum)
+                            {
+                                points.Remove(points[i]);
+                            }
+                        }
                         status.DrawStatus();
                         Frame3();
                         Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
@@ -727,10 +426,11 @@ namespace Hexaprog
                     case ConsoleKey.Spacebar:
                         points.Add(new Point()
                         {
-                            x = pos.Item1,
-                            y = pos.Item2,
-                            color = (ConsoleColor)color,
-                            symbol = ch[intensity]
+                            X = pos.Item1,
+                            Y = pos.Item2,
+                            Color = (ConsoleColor)color,
+                            Symbol = ch[intensity],
+                            Page = pagenum
                         });
                         Console.Write(ch[intensity]);
                         pos = Console.GetCursorPosition();
@@ -742,7 +442,7 @@ namespace Hexaprog
                         Console.SetCursorPosition(pos.Item1, pos.Item2);
                         break;
                     case ConsoleKey.L:
-                        points = LoadFile("draw.txt");
+                        points = LoadFile("draw.txt", pagenum);
                         status.DrawStatus();
                         Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
                         break;
@@ -765,19 +465,37 @@ namespace Hexaprog
                             Console.SetCursorPosition(1, 6);
                             Console.Write("Press E to switch to eraser mode.");
                             Console.SetCursorPosition(1, 7);
-                            Console.Write("Press R to reset your canvas.");
+                            Console.Write("Press R to reset your current page.");
                             Console.SetCursorPosition(1, 8);
                             Console.Write("Use the add and subtract buttons to change your brush intesity.");
                             Console.SetCursorPosition(1, 9);
-                            Console.Write("Use the A button to determain a circle center point, then press it again in a different place to add the radius.");
+                            Console.Write("Use the O button to determain a circle center point, then press it again in a different place to add the radius.");
                             Console.SetCursorPosition(1, 10);
-                            Console.Write("Use the C button the same way as the A button to generate a cognito hazard.");
+                            Console.Write("Use the C button the same way as the O button to generate a cognito hazard. It is also recommended to resize the");
+                            Console.SetCursorPosition(1, 11);
+                            Console.Write("console to a bigger resolution. It is not recommended to save it, or do not forget to resize the console.");
+                            Console.SetCursorPosition(1, 12);
+                            Console.Write("Press F3 to change the page upwards, or create a new one.");
+                            Console.SetCursorPosition(1, 13);
+                            Console.Write("Press F2 to change the page downwards.");
+                            Console.SetCursorPosition(1, 15);
+                            Console.Write("On the top left is the status bar, the simbols from left to right: The character and color");
+                            Console.SetCursorPosition(1, 16);
+                            Console.Write("                                                                   The drawing mode: D = draw, E = erase");
+                            Console.SetCursorPosition(1, 17);
+                            Console.Write("                                                                   The save status: U = unsaved, s = saved");
+                            Console.SetCursorPosition(1, 18);
+                            Console.Write("                                                                   The page number");
+                            Console.SetCursorPosition(1, 20);
+                            Console.Write("Colors on the num pad: 0 = Black, 1 = White, 2 = Red, 3 = Blue, 4 = Green, 5 = Cyan");
+                            Console.SetCursorPosition(1, 21);
+                            Console.Write("                       6 = Gray, 7 = Dark blue, 8 = Yellow, 9 = Magenta");
                             help = true;
                         }
                         else
                         {
                             Console.Clear();
-                            LoadFile("draw.txt");
+                            LoadFile("draw.txt", pagenum);
                             status.DrawStatus();
                             Console.SetCursorPosition(pos.Item1, pos.Item2);
                             help = false;
@@ -798,10 +516,11 @@ namespace Hexaprog
                                 {
                                     points.Add(new Point()
                                     {
-                                        x = j,
-                                        y = i,
-                                        color = (ConsoleColor)color,
-                                        symbol = ch[intensity]
+                                        X = j,
+                                        Y = i,
+                                        Color = (ConsoleColor)color,
+                                        Symbol = ch[intensity],
+                                        Page = pagenum
                                     });
                                     Console.SetCursorPosition(j, i);
                                     Console.Write(ch[intensity]);
@@ -810,106 +529,7 @@ namespace Hexaprog
                             Console.SetCursorPosition(pos.Item1, pos.Item2);
                             square.Item2 = false;
                         }
-                        break;
-                    case ConsoleKey.A:
-                        /*int r;
-                        int rpow;
-                        if (!circle.Item2)
-                        {
-                            circle.Item1 = pos;
-                            circle.Item2 = true;
-                        }
-                        else
-                        {
-                            circle.Item2 = false;
-                            r = circle.Item1.Item1 - pos.Item1;
-                            rpow = r * r;
-                            Console.Write(ch[intensity]);
-                            Console.SetCursorPosition(pos.Item1 + 1, pos.Item2);
-                            Console.Write(ch[intensity]);
-                            pos = circle.Item1;
-                            Console.SetCursorPosition(pos.Item1 - (int)(r * 1.6), pos.Item2);
-                            Console.Write(ch[intensity]); 
-                            points.Add(new Point()
-                            {
-                                x = pos.Item1 - (int)(r * 1.6),
-                                y = pos.Item2,
-                                color = (ConsoleColor)color,
-                                symbol = ch[intensity]
-                            });
-                            Console.Write(ch[intensity]);
-                            points.Add(new Point()
-                            {
-                                x = pos.Item1 - (int)(r * 1.6) + 1,
-                                y = pos.Item2,
-                                color = (ConsoleColor)color,
-                                symbol = ch[intensity]
-                            });
-                            pos.Item1++;
-                            for (int j = 1; j <= r; j++)
-                            {
-                                for (int i = 0; i < r * 2 - (r / 2.8); i++)
-                                {
-                                    if (Math.Pow((double)(circle.Item1.Item1 - pos.Item1), 2) + Math.Pow((double)(circle.Item1.Item2 - pos.Item2), 2) <= (rpow - j * r) * Math.PI - 3)
-                                    {
-                                        PointDraw(pos.Item1, pos.Item2, ch[intensity]);
-                                        points.Add(new Point()
-                                        {
-                                            x = pos.Item1,
-                                            y = pos.Item2,
-                                            color = (ConsoleColor)color,
-                                            symbol = ch[intensity]
-                                        });
-                                        PointDraw(pos.Item1 - i * 2, pos.Item2, ch[intensity]);
-                                        points.Add(new Point()
-                                        {
-                                            x = pos.Item1 - i * 2,
-                                            y = pos.Item2,
-                                            color = (ConsoleColor)color,
-                                            symbol = ch[intensity]
-                                        });
-                                        pos.Item1++;
-                                    }
-                                }
-                                pos = circle.Item1;
-                                pos.Item2 -= 1 * j;
-                            }
-                            pos = (pos.Item1 + r, pos.Item2);
-
-                            for (int j = 1; j <= r; j++)
-                            {
-                                for (int i = 0; i < r * 2 - (r / 2.8); i++)
-                                {
-                                    if (Math.Pow((double)(circle.Item1.Item1 - pos.Item1), 2) + Math.Pow((double)(circle.Item1.Item2 - pos.Item2), 2) <= (rpow - j * r) * Math.PI - 3 && circle.Item1.Item2 + pos.Item2 > circle.Item1.Item2 + r)
-                                    {
-
-                                        PointDraw(pos.Item1, pos.Item2, ch[intensity]);
-                                        points.Add(new Point()
-                                        {
-                                            x = pos.Item1,
-                                            y = pos.Item2,
-                                            color = (ConsoleColor)color,
-                                            symbol = ch[intensity]
-                                        });
-                                        PointDraw(pos.Item1 - i * 2, pos.Item2, ch[intensity]);
-                                        points.Add(new Point()
-                                        {
-                                            x = pos.Item1 - i * 2,
-                                            y = pos.Item2,
-                                            color = (ConsoleColor)color,
-                                            symbol = ch[intensity]
-                                        });
-                                        pos.Item1++;
-                                    }
-                                }
-                                pos = circle.Item1;
-
-                                pos.Item2 += 1 * j;
-
-
-                            }
-                        }
-                        break;*/
+                        break;               
                     case ConsoleKey.C:
                         int rc;
                         int rcpow;
@@ -931,44 +551,48 @@ namespace Hexaprog
                             Console.Write(ch[intensity]);
                             points.Add(new Point()
                             {
-                                x = pos.Item1 - (int)(rc * 1.6),
-                                y = pos.Item2,
-                                color = (ConsoleColor)color,
-                                symbol = ch[intensity]
+                                X = pos.Item1 - (int)(rc * 1.6),
+                                Y = pos.Item2,
+                                Color = (ConsoleColor)color,
+                                Symbol = ch[intensity],
+                                Page = pagenum
                             });
                             Console.Write(ch[intensity]);
                             points.Add(new Point()
                             {
-                                x = pos.Item1 - (int)(rc * 1.6) + 1,
-                                y = pos.Item2,
-                                color = (ConsoleColor)color,
-                                symbol = ch[intensity]
+                                X = pos.Item1 - (int)(rc * 1.6) + 1,
+                                Y = pos.Item2,
+                                Color = (ConsoleColor)color,
+                                Symbol = ch[intensity],
+                                Page = pagenum
                             });
                             pos.Item1++;
                             for (int j = 1; j <= rc; j++)
                             {
                                 for (int i = 0; i < rc * 2 - (rc / 2.8); i++)
                                 {
-                                    if (Math.Pow((double)(hazard.Item1.Item1 - pos.Item1), 2) + Math.Pow((double)(hazard.Item1.Item2 - pos.Item2), 2) <= (rcpow - j * rc) * Math.Cos(i*j) * Math.Tanh(i*j))
+                                    if (Math.Pow((double)(hazard.Item1.Item1 - pos.Item1), 2) + Math.Pow((double)(hazard.Item1.Item2 - pos.Item2), 2) <= (rcpow - j * rc) * Math.Cos(i * j) * Math.Tanh(i * j))
                                     {
                                         PointDraw(pos.Item1, pos.Item2, ch[intensity]);
 
                                         points.Add(new Point()
                                         {
-                                            x = pos.Item1,
-                                            y = pos.Item2,
-                                            color = (ConsoleColor)color,
-                                            symbol = ch[intensity]
+                                            X = pos.Item1,
+                                            Y = pos.Item2,
+                                            Color = (ConsoleColor)color,
+                                            Symbol = ch[intensity],
+                                            Page = pagenum
                                         });
 
                                         PointDraw(pos.Item1 - i * 2, pos.Item2, ch[intensity]);
 
                                         points.Add(new Point()
                                         {
-                                            x = pos.Item1 - i * 2,
-                                            y = pos.Item2,
-                                            color = (ConsoleColor)color,
-                                            symbol = ch[intensity]
+                                            X = pos.Item1 - i * 2,
+                                            Y = pos.Item2,
+                                            Color = (ConsoleColor)color,
+                                            Symbol = ch[intensity],
+                                            Page = pagenum
                                         });
                                         pos.Item1++;
                                     }
@@ -982,24 +606,26 @@ namespace Hexaprog
                             {
                                 for (int i = 0; i < rc * 2 - (rc / 2.8); i++)
                                 {
-                                    if (Math.Pow((double)(hazard.Item1.Item1 - pos.Item1), 2) + Math.Pow((double)(hazard.Item1.Item2 - pos.Item2), 2) <= (rcpow - j * rc) * Math.Cos(i*j) * Math.Tanh(i*j)&& hazard.Item1.Item2 + pos.Item2 > hazard.Item1.Item2 + rc)
+                                    if (Math.Pow((double)(hazard.Item1.Item1 - pos.Item1), 2) + Math.Pow((double)(hazard.Item1.Item2 - pos.Item2), 2) <= (rcpow - j * rc) * Math.Cos(i * j) * Math.Tanh(i * j) && hazard.Item1.Item2 + pos.Item2 > hazard.Item1.Item2 + rc)
                                     {
 
                                         PointDraw(pos.Item1, pos.Item2, ch[intensity]);
                                         points.Add(new Point()
                                         {
-                                            x = pos.Item1,
-                                            y = pos.Item2,
-                                            color = (ConsoleColor)color,
-                                            symbol = ch[intensity]
+                                            X = pos.Item1,
+                                            Y = pos.Item2,
+                                            Color = (ConsoleColor)color,
+                                            Symbol = ch[intensity],
+                                            Page = pagenum
                                         });
                                         PointDraw(pos.Item1 - i * 2, pos.Item2, ch[intensity]);
                                         points.Add(new Point()
                                         {
-                                            x = pos.Item1 - i * 2,
-                                            y = pos.Item2,
-                                            color = (ConsoleColor)color,
-                                            symbol = ch[intensity]
+                                            X = pos.Item1 - i * 2,
+                                            Y = pos.Item2,
+                                            Color = (ConsoleColor)color,
+                                            Symbol = ch[intensity],
+                                            Page = pagenum
                                         });
                                         pos.Item1++;
                                     }
@@ -1025,54 +651,52 @@ namespace Hexaprog
                             circle.Item2 = false;
                             r = circle.Item1.Item1 - pos.Item1;
                             rpow = r * r;
-                            /*Console.Write(ch[intensity]);
-                            Console.Write(ch[intensity]);*/
                             Console.SetCursorPosition(pos.Item1 + 1, pos.Item2);
                             Console.Write(ch[intensity]);
                             Console.Write(ch[intensity]);
                             Console.Write(ch[intensity]);
                             pos = circle.Item1;
                             Console.SetCursorPosition(pos.Item1 - (int)(r * 1.6), pos.Item2);
-                           /*Console.Write(ch[intensity]);
-                            Console.Write(ch[intensity]);*/
                             points.Add(new Point()
                             {
-                                x = pos.Item1 - (int)(r * 1.6),
-                                y = pos.Item2,
-                                color = (ConsoleColor)color,
-                                symbol = ch[intensity]
+                                X = pos.Item1 - (int)(r * 1.6),
+                                Y = pos.Item2,
+                                Color = (ConsoleColor)color,
+                                Symbol = ch[intensity],
+                                Page = pagenum
                             });
-                            /*Console.Write(ch[intensity]);
-                            Console.Write(ch[intensity]);*/
                             points.Add(new Point()
                             {
-                                x = pos.Item1 - (int)(r * 1.6) + 1,
-                                y = pos.Item2,
-                                color = (ConsoleColor)color,
-                                symbol = ch[intensity]
+                                X = pos.Item1 - (int)(r * 1.6) + 1,
+                                Y = pos.Item2,
+                                Color = (ConsoleColor)color,
+                                Symbol = ch[intensity],
+                                Page = pagenum
                             });
                             pos.Item1++;
-                            for (int j = 0; j < r ; j++)
+                            for (int j = 0; j < r; j++)
                             {
-                                for (int i = 0; i < r ; i++)
+                                for (int i = 0; i < r; i++)
                                 {
-                                    if (Math.Pow((double)(circle.Item1.Item1 - pos.Item1), 2)-r + Math.Pow((double)(circle.Item1.Item2 - pos.Item2), 2)-r <= (rpow - j * r ) )
+                                    if (Math.Pow((double)(circle.Item1.Item1 - pos.Item1), 2) - r + Math.Pow((double)(circle.Item1.Item2 - pos.Item2), 2) - r <= (rpow - j * r))
                                     {
                                         PointDraw(pos.Item1, pos.Item2, pixel);
                                         points.Add(new Point()
                                         {
-                                            x = pos.Item1,
-                                            y = pos.Item2,
-                                            color = (ConsoleColor)color,
-                                            symbol = ch[intensity]
+                                            X = pos.Item1,
+                                            Y = pos.Item2,
+                                            Color = (ConsoleColor)color,
+                                            Symbol = ch[intensity],
+                                            Page = pagenum
                                         });
-                                        PointDraw(pos.Item1 - i * 2 *2, pos.Item2, pixel);
+                                        PointDraw(pos.Item1 - i * 2 * 2, pos.Item2, pixel);
                                         points.Add(new Point()
                                         {
-                                            x = pos.Item1 - i * 2,
-                                            y = pos.Item2,
-                                            color = (ConsoleColor)color,
-                                            symbol = ch[intensity]
+                                            X = pos.Item1 - i * 2,
+                                            Y = pos.Item2,
+                                            Color = (ConsoleColor)color,
+                                            Symbol = ch[intensity],
+                                            Page = pagenum
                                         });
                                         pos.Item1++;
                                         pos.Item1++;
@@ -1084,95 +708,59 @@ namespace Hexaprog
                             }
                             pos = (pos.Item1 + r, pos.Item2);
 
-                            for (int j = 0; j < r ; j++)
+                            for (int j = 0; j < r; j++)
                             {
-                                for (int i = 0; i < r ; i++)
+                                for (int i = 0; i < r; i++)
                                 {
-                                    if (Math.Pow((double)(circle.Item1.Item1 - pos.Item1), 2)-r + Math.Pow((double)(circle.Item1.Item2 - pos.Item2), 2)-r <= (rpow - j * r ) 
-                                        /* && (circle.Item1.Item2 + pos.Item2 > circle.Item1.Item2 + r)*/)
+                                    if (Math.Pow((double)(circle.Item1.Item1 - pos.Item1), 2) - r + Math.Pow((double)(circle.Item1.Item2 - pos.Item2), 2) - r <= (rpow - j * r))
                                     {
 
                                         PointDraw(pos.Item1, pos.Item2, pixel);
                                         points.Add(new Point()
                                         {
-                                            x = pos.Item1,
-                                            y = pos.Item2,
-                                            color = (ConsoleColor)color,
-                                            symbol = ch[intensity]
+                                            X = pos.Item1,
+                                            Y = pos.Item2,
+                                            Color = (ConsoleColor)color,
+                                            Symbol = ch[intensity],
+                                            Page = pagenum
                                         });
                                         PointDraw(pos.Item1 - i * 2 * 2, pos.Item2, pixel);
                                         points.Add(new Point()
                                         {
-                                            x = pos.Item1 - i * 2,
-                                            y = pos.Item2,
-                                            color = (ConsoleColor)color,
-                                            symbol = ch[intensity]
+                                            X = pos.Item1 - i * 2,
+                                            Y = pos.Item2,
+                                            Color = (ConsoleColor)color,
+                                            Symbol = ch[intensity],
+                                            Page = pagenum
                                         });
                                         pos.Item1++;
                                         pos.Item1++;
                                     }
                                 }
                                 pos = circle.Item1;
-
                                 pos.Item2 += 1 * j;
-
-
                             }
                         }
                         break;
                     case ConsoleKey.F3:
-                        pages[pagenum] = new List<Point>();
-                        for (int i = 0; i < points.Count; i++)
-                        {
-                           pages[pagenum].Add(points[i]);
-                        }
+                        pos = Console.GetCursorPosition();
+                        SaveFile(points);
+                        Console.Clear();
                         pagenum++;
-                        points = new List<Point>();
-                        try
-                        {
-                            for (int i = 0; i < pages[pagenum].Count; i++)
-                            {
-                                points.Add(pages[pagenum][i]);
-                            }
-                        }
-                        catch(ArgumentOutOfRangeException)
-                        {
-                            pages.Add(new List<Point>());
-                            for (int i = 0; i < pages[pagenum].Count; i++)
-                            {
-                                points.Add(pages[pagenum][i]);
-                            }
-                        }
-                        LoadPoints(points);
+                        LoadPoints(points, pagenum);
+                        status.page = pagenum + 1;
                         status.DrawStatus();
                         Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
                         break;
                     case ConsoleKey.F2:
                         if (pagenum != 0)
                         {
-                            pages[pagenum] = new List<Point>();
-                            for (int i = 0; i < points.Count; i++)
-                            {
-                                pages[pagenum].Add(points[i]);
-                            }
+                            pos = Console.GetCursorPosition();
+                            SaveFile(points);
+                            Console.Clear();
                             pagenum--;
-                            points = new List<Point>();
-                            try
-                            {
-                                for (int i = 0; i < pages[pagenum].Count; i++)
-                                {
-                                    points.Add(pages[pagenum][i]);
-                                }
-                            }
-                            catch (ArgumentOutOfRangeException)
-                            {
-                                pages.Add(new List<Point>());
-                                for (int i = 0; i < pages[pagenum].Count; i++)
-                                {
-                                    points.Add(pages[pagenum][i]);
-                                }
-                            }
-                            LoadPoints(points);
+                            status.page = pagenum + 1;
+                            LoadPoints(points, pagenum);
                             status.DrawStatus();
                             Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
                         }
