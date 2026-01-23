@@ -43,7 +43,16 @@ namespace Hexaprog
     {
         static void Main(string[] args)
         {
-            Rajzolas();
+            try
+            {
+                Rajzolas();
+            }
+            catch (FileNotFoundException)
+            {
+                Stream streamD = new FileStream("draw.txt", FileMode.CreateNew);
+                streamD.Close();
+                Rajzolas();
+            }
         }
         static void Frame3()
         {
