@@ -4,14 +4,26 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+using MySql.EntityFrameworkCore.Extensions;
+using System.Security.Policy;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace Hexaprog
 {
-    class Point
+    /*public class Rajz
+    {
+
+        public string Name { get; set; }
+
+        public string Points { get; set; }
+    }*/
+    public class Point
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public ConsoleColor Color { get; set; }
+        public int Color { get; set; }
         public char Symbol { get; set; }
         public int Page { get; set; }
 
@@ -26,7 +38,7 @@ namespace Hexaprog
             {
                 X = int.Parse(strings[0]),
                 Y = int.Parse(strings[1]),
-                Color = (ConsoleColor)int.Parse(strings[2]),
+                Color = int.Parse(strings[2]),
                 Symbol = strings[3][0],
                 Page = int.Parse(strings[4])
             };
@@ -35,8 +47,62 @@ namespace Hexaprog
         public static void DrawPoint(Point point)
         {
             Console.SetCursorPosition(point.X, point.Y);
-            Console.ForegroundColor = point.Color;
+            Console.ForegroundColor = (ConsoleColor)point.Color;
             Console.Write(point.Symbol);
+        }
+    }
+    public class LibraryContext : DbContext
+    {
+        public DbSet<Point> Page0 { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseMySQL("server=localhost;database=rajz;user=root;password=");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Point>(entity =>
+            {
+                entity.HasKey(e => new { e.X, e.Y, e.Page });
+                entity.Property(e => e.Color);
+                entity.Property(e => e.Symbol);
+            });
+        }
+
+
+        public static void InsertData(List<Point> points,int pagenum)
+        {
+            
+            var context = new LibraryContext();
+            context.Database.EnsureCreated();
+            for (int i = 0; i < points.Count; i++)
+            {
+                context.Page0.Add(points[i]);
+            }
+            context.SaveChanges();
+
+        }
+
+        public static List<Point> GetData(int pagenum)
+        {
+
+            // Gets and prints all books in database
+            var context = new LibraryContext();
+            List<Point> points = new List<Point>();
+            
+            var buffer = context.Page0.ToList();
+
+            foreach (var pont in buffer)
+            {
+                if (pagenum == pont.Page)
+                {
+                    points.Add(pont);
+                }
+            }
+            return points;
         }
     }
     internal class Program
@@ -86,6 +152,7 @@ namespace Hexaprog
                 writerD.Write($"{points[i].ToCSV()}\r\n");
             }
             writerD.Close();
+            //LibraryContext.InsertData(points);
 
         }
         static List<Point> LoadFile(string pathD, int pagenum)
@@ -100,6 +167,23 @@ namespace Hexaprog
             for (int i = 0; i < lines.Length; i++)
             {
                 points.Add(Point.FromCSV(lines[i]));
+                if (points[i].Page == pagenum)
+                {
+                    Point.DrawPoint(points[i]);
+                }
+            }
+
+            return points;
+        }
+        static List<Point> LoadDB(int pagenum)
+        {
+            List<Point> points = LibraryContext.GetData(pagenum);
+            Console.Clear();
+            Frame3();
+            Console.SetCursorPosition(0, 1);
+
+            for (int i = 0; i < points.Count; i++)
+            {
                 if (points[i].Page == pagenum)
                 {
                     Point.DrawPoint(points[i]);
@@ -177,6 +261,8 @@ namespace Hexaprog
 
             Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
             pos = Console.GetCursorPosition();
+
+
             #endregion
 
             while (Console.ReadKey(true).Key != ConsoleKey.Escape)
@@ -187,13 +273,13 @@ namespace Hexaprog
                     case ConsoleKey.UpArrow:
                         if (pos.Item2 > 2 && Console.CapsLock)
                         {
-                            
+
                             Console.Write(ch[intensity]);
                             points.Add(new Point()
                             {
                                 X = pos.Item1,
                                 Y = pos.Item2,
-                                Color = (ConsoleColor)color,
+                                Color = color,
                                 Symbol = ch[intensity],
                                 Page = pagenum
                             });
@@ -209,13 +295,13 @@ namespace Hexaprog
                     case ConsoleKey.DownArrow:
                         if (pos.Item2 < Console.WindowHeight - 2 && Console.CapsLock)
                         {
-                            
+
                             Console.Write(ch[intensity]);
                             points.Add(new Point()
                             {
                                 X = pos.Item1,
                                 Y = pos.Item2,
-                                Color = (ConsoleColor)color,
+                                Color = color,
                                 Symbol = ch[intensity],
                                 Page = pagenum
                             });
@@ -231,13 +317,13 @@ namespace Hexaprog
                     case ConsoleKey.LeftArrow:
                         if (pos.Item1 > 1 && Console.CapsLock)
                         {
-                            
+
                             Console.Write(ch[intensity]);
                             points.Add(new Point()
                             {
                                 X = pos.Item1,
                                 Y = pos.Item2,
-                                Color = (ConsoleColor)color,
+                                Color = color,
                                 Symbol = ch[intensity],
                                 Page = pagenum
                             });
@@ -253,13 +339,13 @@ namespace Hexaprog
                     case ConsoleKey.RightArrow:
                         if (pos.Item1 < Console.WindowWidth - 2 && Console.CapsLock)
                         {
-                            
+
                             Console.Write(ch[intensity]);
                             points.Add(new Point()
                             {
                                 X = pos.Item1,
                                 Y = pos.Item2,
-                                Color = (ConsoleColor)color,
+                                Color = color,
                                 Symbol = ch[intensity],
                                 Page = pagenum
                             });
@@ -437,7 +523,7 @@ namespace Hexaprog
                         {
                             X = pos.Item1,
                             Y = pos.Item2,
-                            Color = (ConsoleColor)color,
+                            Color = color,
                             Symbol = ch[intensity],
                             Page = pagenum
                         });
@@ -445,13 +531,15 @@ namespace Hexaprog
                         pos = Console.GetCursorPosition();
                         break;
                     case ConsoleKey.S:
-                        SaveFile(points);
+                        //SaveFile(points);
+                        LibraryContext.InsertData(points, pagenum);
                         Console.SetCursorPosition(4, 0);
                         Console.Write('S');
                         Console.SetCursorPosition(pos.Item1, pos.Item2);
                         break;
                     case ConsoleKey.L:
-                        points = LoadFile("draw.txt", pagenum);
+                        //points = LoadFile("draw.txt", pagenum);
+                        LoadDB(pagenum);
                         status.DrawStatus();
                         Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
                         break;
@@ -527,7 +615,7 @@ namespace Hexaprog
                                     {
                                         X = j,
                                         Y = i,
-                                        Color = (ConsoleColor)color,
+                                        Color = color,
                                         Symbol = ch[intensity],
                                         Page = pagenum
                                     });
@@ -538,7 +626,7 @@ namespace Hexaprog
                             Console.SetCursorPosition(pos.Item1, pos.Item2);
                             square.Item2 = false;
                         }
-                        break;               
+                        break;
                     case ConsoleKey.C:
                         int rc;
                         int rcpow;
@@ -562,7 +650,7 @@ namespace Hexaprog
                             {
                                 X = pos.Item1 - (int)(rc * 1.6),
                                 Y = pos.Item2,
-                                Color = (ConsoleColor)color,
+                                Color = color,
                                 Symbol = ch[intensity],
                                 Page = pagenum
                             });
@@ -571,7 +659,7 @@ namespace Hexaprog
                             {
                                 X = pos.Item1 - (int)(rc * 1.6) + 1,
                                 Y = pos.Item2,
-                                Color = (ConsoleColor)color,
+                                Color = color,
                                 Symbol = ch[intensity],
                                 Page = pagenum
                             });
@@ -588,7 +676,7 @@ namespace Hexaprog
                                         {
                                             X = pos.Item1,
                                             Y = pos.Item2,
-                                            Color = (ConsoleColor)color,
+                                            Color = color,
                                             Symbol = ch[intensity],
                                             Page = pagenum
                                         });
@@ -599,7 +687,7 @@ namespace Hexaprog
                                         {
                                             X = pos.Item1 - i * 2,
                                             Y = pos.Item2,
-                                            Color = (ConsoleColor)color,
+                                            Color = color,
                                             Symbol = ch[intensity],
                                             Page = pagenum
                                         });
@@ -623,7 +711,7 @@ namespace Hexaprog
                                         {
                                             X = pos.Item1,
                                             Y = pos.Item2,
-                                            Color = (ConsoleColor)color,
+                                            Color = color,
                                             Symbol = ch[intensity],
                                             Page = pagenum
                                         });
@@ -632,7 +720,7 @@ namespace Hexaprog
                                         {
                                             X = pos.Item1 - i * 2,
                                             Y = pos.Item2,
-                                            Color = (ConsoleColor)color,
+                                            Color = color,
                                             Symbol = ch[intensity],
                                             Page = pagenum
                                         });
@@ -670,7 +758,7 @@ namespace Hexaprog
                             {
                                 X = pos.Item1 - (int)(r * 1.6),
                                 Y = pos.Item2,
-                                Color = (ConsoleColor)color,
+                                Color = color,
                                 Symbol = ch[intensity],
                                 Page = pagenum
                             });
@@ -678,7 +766,7 @@ namespace Hexaprog
                             {
                                 X = pos.Item1 - (int)(r * 1.6) + 1,
                                 Y = pos.Item2,
-                                Color = (ConsoleColor)color,
+                                Color = color,
                                 Symbol = ch[intensity],
                                 Page = pagenum
                             });
@@ -694,7 +782,7 @@ namespace Hexaprog
                                         {
                                             X = pos.Item1,
                                             Y = pos.Item2,
-                                            Color = (ConsoleColor)color,
+                                            Color = color,
                                             Symbol = ch[intensity],
                                             Page = pagenum
                                         });
@@ -703,7 +791,7 @@ namespace Hexaprog
                                         {
                                             X = pos.Item1 - i * 2,
                                             Y = pos.Item2,
-                                            Color = (ConsoleColor)color,
+                                            Color = color,
                                             Symbol = ch[intensity],
                                             Page = pagenum
                                         });
@@ -729,7 +817,7 @@ namespace Hexaprog
                                         {
                                             X = pos.Item1,
                                             Y = pos.Item2,
-                                            Color = (ConsoleColor)color,
+                                            Color = color,
                                             Symbol = ch[intensity],
                                             Page = pagenum
                                         });
@@ -738,7 +826,7 @@ namespace Hexaprog
                                         {
                                             X = pos.Item1 - i * 2,
                                             Y = pos.Item2,
-                                            Color = (ConsoleColor)color,
+                                            Color = color,
                                             Symbol = ch[intensity],
                                             Page = pagenum
                                         });
@@ -778,4 +866,5 @@ namespace Hexaprog
             }
         }
     }
+
 }
