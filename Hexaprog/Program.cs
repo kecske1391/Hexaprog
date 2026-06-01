@@ -26,7 +26,15 @@ namespace Hexaprog
         public int Color { get; set; }
         public char Symbol { get; set; }
         public int Page { get; set; }
-
+        public override bool Equals(object? obj)
+        {
+            return base.Equals(obj) || obj is Point point &&
+                   X == point.X &&
+                   Y == point.Y &&
+                   Color == point.Color &&
+                   Symbol == point.Symbol &&
+                   Page == point.Page;
+        }
         public string ToCSV()
         {
             return $"{X},{Y},{(int)Color},{Symbol},{Page}";
@@ -53,6 +61,12 @@ namespace Hexaprog
     }
     public class LibraryContext : DbContext
     {
+        public static LibraryContext Instance => instance;
+        private static LibraryContext instance = new();
+        private LibraryContext()
+        {
+
+        }
         public DbSet<Point> Page0 { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -66,7 +80,7 @@ namespace Hexaprog
 
             modelBuilder.Entity<Point>(entity =>
             {
-                entity.HasKey(e => new { e.X, e.Y, e.Page });
+                entity.HasKey(e => new { e.X, e.Y, e.Page});
                 entity.Property(e => e.Color);
                 entity.Property(e => e.Symbol);
             });
@@ -75,17 +89,19 @@ namespace Hexaprog
 
         public static void InsertData(List<Point> points,int pagenum)
         {
-            
-            var context = new LibraryContext();
-            context.Database.EnsureCreated();
-            for (int i = 0; i < points.Count; i++)
+            List<Point> pointsD = points.Distinct().ToList();
+            Instance.Page0.RemoveRange(Instance.Page0.Where(p => p.Page == pagenum));
+            for (int i = 0; i < pointsD.Count; i++)
             {
-                context.Page0.Add(points[i]);
+                if (pointsD[i].Page == pagenum)
+                {
+                    Instance.Page0.Add(pointsD[i]);
+                }
+                
             }
-            context.SaveChanges();
+            Instance.SaveChanges();
 
         }
-
         public static List<Point> GetData(int pagenum)
         {
 
@@ -539,7 +555,7 @@ namespace Hexaprog
                         break;
                     case ConsoleKey.L:
                         //points = LoadFile("draw.txt", pagenum);
-                        LoadDB(pagenum);
+                        points = LoadDB(pagenum);
                         status.DrawStatus();
                         Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
                         break;
@@ -572,9 +588,9 @@ namespace Hexaprog
                             Console.SetCursorPosition(1, 11);
                             Console.Write("console to a bigger resolution. It is not recommended to save it, or do not forget to resize the console.");
                             Console.SetCursorPosition(1, 12);
-                            Console.Write("Press F3 to change the page upwards, or create a new one.");
+                            //Console.Write("Press F3 to change the page upwards, or create a new one.");
                             Console.SetCursorPosition(1, 13);
-                            Console.Write("Press F2 to change the page downwards.");
+                            //Console.Write("Press F2 to change the page downwards.");
                             Console.SetCursorPosition(1, 15);
                             Console.Write("On the top left is the status bar, the simbols from left to right: The character and color");
                             Console.SetCursorPosition(1, 16);
